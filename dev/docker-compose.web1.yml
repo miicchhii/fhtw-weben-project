@@ -1,0 +1,56 @@
+version: '3.1'
+services:
+    mysql:
+        image: 'mysql:8.0'
+        working_dir: /application
+        volumes:
+            - '../httpdocs:/application'
+        environment:
+            - MYSQL_ROOT_PASSWORD=password
+            - MYSQL_DATABASE=hotelsystem
+            - MYSQL_USER=databaseuser
+            - MYSQL_PASSWORD=databasepassword
+        ports:
+            - '1236:3306'
+
+    proxy:
+        image: nginx:alpine
+        hostname: superhappy.local
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - ./proxy/conf/nginx.conf:/etc/nginx/nginx.conf
+            - ./proxy/certs:/etc/nginx/certs
+        depends_on:
+            - webserver
+            - phpmyadmin
+
+    webserver:
+        image: 'nginx:alpine'
+        working_dir: /application
+        volumes:
+            - '../app:/application'
+            - './phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+        ports:
+            - '1234:80'
+
+    php-fpm:
+        build: phpdocker/php-fpm
+        working_dir: /application
+        volumes:
+            - '../httpdocs:/application'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.3/fpm/conf.d/99-overrides.ini'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.3/cli/conf.d/99-overrides.ini'
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            - PMA_HOST=mysql
+            - PMA_PORT=3306
+            - PMA_USER=root
+            - PMA_PASSWORD=password
+        ports:
+            - '1235:80'
+        depends_on:
+            - mysql
