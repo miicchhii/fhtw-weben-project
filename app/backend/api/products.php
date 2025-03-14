@@ -4,7 +4,9 @@
 function handleProductRequest($method, $action, $conn)
 {
     if ($method === 'GET') {
-        if ($action === 'byCategory' && isset($_GET['id'])) {
+        if (is_numeric($action)) {  // Check if the action is a product ID
+            getProductById($conn, intval($action));  // Get product by ID
+        } elseif ($action === 'byCategory' && isset($_GET['id'])) {
             getProductsByCategory($conn, intval($_GET['id']));
         } else {
             getAllProducts($conn);
@@ -44,6 +46,23 @@ function getProductsByCategory($conn, $categoryId)
     }
 
     echo json_encode($products);
+}
+
+// Get product by ID
+function getProductById($conn, $productId)
+{
+    $stmt = $conn->prepare("SELECT * FROM products WHERE product_id = ?");
+    $stmt->bind_param("i", $productId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $product = $result->fetch_assoc();
+        echo json_encode($product);
+    } else {
+        http_response_code(404);  // Not Found
+        echo json_encode(["message" => "Product not found"]);
+    }
 }
 
 // Create a new product

@@ -46,11 +46,13 @@ echo '<!DOCTYPE html>
         <ul>
             <li><span class="method">GET</span> /api/products - Get all products</li>
             <li><span class="method">GET</span> /api/products/{id} - Get a product by ID</li>
+            <li><span class="method">GET</span> /api/products/byCategory?id={category_id} - Get products by category ID</li>
             <li><span class="method">POST</span> /api/products - Create a new product</li>
             <li><span class="method">PUT</span> /api/products/{id} - Update an existing product</li>
             <li><span class="method">DELETE</span> /api/products/{id} - Delete a product</li>
         </ul>
     </div>
+
 
     <div class="endpoint">
         <h3>Categories</h3>
