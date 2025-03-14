@@ -12,6 +12,8 @@ services:
       - MYSQL_PASSWORD=databasepassword
     ports:
       - '1236:3306'
+    networks:
+      - backend
 
   # Frontend container - serving static files
   frontend:
@@ -63,6 +65,8 @@ services:
       - '1237:80'
     depends_on:
       - mysql
+    networks:
+      - backend
 
 networks:
   backend:

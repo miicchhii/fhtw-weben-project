@@ -1,67 +1,64 @@
+import {renderNavBar} from './ui/navbar.js';
+import {renderSidebar} from './ui/sidebar.js';
+import {renderHomePage} from './pages/home.js';
+import {renderProductsPage} from './pages/products.js';
+
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-    //add basic layout
+    // Add the basic layout
     document.getElementById("body").innerHTML = `
         <div class="d-flex flex-column" style="height: 100vh">
-            <div
-                    id="nav"
-                    class="border d-flex align-items-center flex-shrink-0"
-                    style=""
-            >
-
-            </div>
+            <div id="nav" class="border d-flex align-items-center flex-shrink-0"></div>
             <div class="d-flex flex-grow-1">
-                <div
-                        id="sidebar"
-                        class="border d-none d-md-flex flex-column flex-shrink-0"
-                        style="width: 16.666%"
-                >
-
-                </div>
-                <div id="content" class="border d-flex flex-column flex-grow-1">
-
-                </div>
+                <div id="sidebar" class="border d-none d-md-flex flex-column flex-shrink-0" style="width: 16.666%"></div>
+                <div id="content" class="border d-flex flex-column flex-grow-1"></div>
             </div>
-        </div> `;
+        </div>`;
+
+    // Render sections
     renderNavBar();
+    renderSidebar();
 
-    document.getElementById("sidebar").innerHTML = "Sidebar-Code";
+    // Set up event listeners for page navigation
+    setupNavigation();
 
-    document.getElementById("content").innerHTML = "Content-Code";
+    // Default page
+    showPage("home");
 }
 
+// Function to handle navigation
+function setupNavigation() {
+    // Example: Adding event listener to a button with id 'productsBtn'
+    document.getElementById("productsBtn").addEventListener("click", function () {
+        showPage("products");
+    });
+    document.getElementById("homeBtn").addEventListener("click", function () {
+        showPage("home");
+    });
+    document.getElementById("accountBtn").addEventListener("click", function () {
+        showPage("account");
+    });
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+        //handle logout
+    });
 
-function renderNavBar() {
-    document.getElementById("nav").innerHTML = `
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <img src="static/img/logo.webp" alt="Logo Super Happy Hotel" width="100px">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <button class="nav-link">Mein Konto</button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link">Logout</button>
-                        </li>
-                    </ul>
-                </div>
-        </nav>
-    `;
+    // Add other navigation buttons in a similar way
 }
 
 function showPage(page) {
     switch (page) {
         case "home":
-            document.getElementsByTagName("body");
-
+            renderHomePage();
+            break;
+        case "products":
+            renderProductsPage();
+            break;
+        case "account":
+            renderAccountPage();
             break;
         default:
+            renderHomePage(); // Fallback to home if unknown page
             break;
     }
 }
