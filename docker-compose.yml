@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # You can change this password
+      MYSQL_DATABASE: byteportDB        # Default database name
+      MYSQL_USER: user                  # Database user
+      MYSQL_PASSWORD: as456dnfiuwc456vfie456wqgovn456roi  # User password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mysql-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-container
+    environment:
+      PMA_HOST: mysql                # This refers to the MySQL service
+      PMA_PORT: 3306
+      PMA_USER: root                 # User for logging into phpMyAdmin
+      PMA_PASSWORD: rootpassword     # The password for the user
+    ports:
+      - "1234:80"                    # Expose phpMyAdmin on port 8080
+    networks:
+      - mysql-network
+    depends_on:
+      - mysql                        # Wait for MySQL to be ready before starting phpMyAdmin
+
+networks:
+  mysql-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local

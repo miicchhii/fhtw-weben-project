@@ -5,9 +5,9 @@ export function renderProductsPage() {
             <p>This is the products page content.</p>
         </div>
     `;
-
+    console.log("On Product Page")
     // Fetch products from API
-    fetch('http://localhost:1235/api/products')  // Your endpoint for fetching products
+    fetch('http://localhost:8080/api/products')  // Your endpoint for fetching products
         .then(response => response.json())
         .then(products => {
             // Generate HTML for product cards
@@ -40,4 +40,5 @@ export function renderProductsPage() {
             console.error('Error fetching products:', error);
             document.getElementById("content").innerHTML = '<p>Failed to load products.</p>';
         });
+    console.log("Done fetching")
 }

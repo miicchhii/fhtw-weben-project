@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Fri Mar 28 14:02:28 CET 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046): instance a816c00e-0195-dcd8-c137-00000269c0d8 
+on database directory memory:C:\Users\Michael\Dropbox\Obsidian\obsidian_global_private_vault\global_private\FHTW\25SS\WEBEN\fhtw-weben-project\db_news with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@76ed5528 
+Loaded from file:/C:/Users/Michael/.m2/repository/org/apache/derby/derby/10.16.1.1/derby-10.16.1.1.jar
+java.vendor=Amazon.com Inc.
+java.runtime.version=21.0.3+9-LTS
+user.dir=C:\Users\Michael\Dropbox\Obsidian\obsidian_global_private_vault\global_private\FHTW\25SS\WEBEN\fhtw-weben-project
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
