@@ -1,3 +1,8 @@
+import {renderHomePage} from "../pages/home.js";
+import {renderProductsPage} from "../pages/products.js";
+import {renderAccountPage} from "../pages/account.js";
+import {renderLoginPage} from "../pages/login.js";
+
 export function renderNavBar() {
     document.getElementById("nav").innerHTML = `
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -21,9 +26,34 @@ export function renderNavBar() {
                         <li class="nav-item">
                             <button id="logoutBtn" class="nav-link">Logout</button>
                         </ul>
+                        <li class="nav-item">
+                            <button id="loginBtn" class="nav-link">Login</button>
+                        </ul>
+                        
                     </div>
                 </div>
             </div>
         </nav>
     `;
+    setupNavigation();
+}
+
+// Function to handle navigation
+function setupNavigation() {
+    // Example: Adding event listener to a button with id 'productsBtn'
+    document.getElementById("productsBtn").addEventListener("click", function () {
+        renderProductsPage();
+    });
+    document.getElementById("homeBtn").addEventListener("click", function () {
+        renderHomePage();
+    });
+    document.getElementById("accountBtn").addEventListener("click", function () {
+        renderAccountPage();
+    });
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+        //handle logout
+    });
+    document.getElementById("loginBtn").addEventListener("click", function () {
+        renderLoginPage();
+    });
 }
