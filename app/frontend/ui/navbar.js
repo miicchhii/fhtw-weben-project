@@ -2,6 +2,7 @@ import {renderHomePage} from "../pages/home.js";
 import {renderProductsPage} from "../pages/products.js";
 import {renderAccountPage} from "../pages/account.js";
 import {renderLoginPage} from "../pages/login.js";
+import {renderUserManagementPage} from "../pages/admin/users.js";
 
 export function renderNavBar() {
     document.getElementById("nav").innerHTML = `
@@ -29,6 +30,9 @@ export function renderNavBar() {
                         <li class="nav-item">
                             <button id="loginBtn" class="nav-link">Login</button>
                         </ul>
+                        <li class="nav-item">
+                            <button id="userMgmtBtn" class="nav-link">User Mgmt.</button>
+                        </ul>
                         
                     </div>
                 </div>
@@ -55,5 +59,8 @@ function setupNavigation() {
     });
     document.getElementById("loginBtn").addEventListener("click", function () {
         renderLoginPage();
+    });
+    document.getElementById("userMgmtBtn").addEventListener("click", function () {
+        renderUserManagementPage();
     });
 }
