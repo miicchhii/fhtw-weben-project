@@ -7,7 +7,7 @@ import {checkLoginStatus} from "../util/helper.js"
 
 
 export async function renderNavBar() {
-    const user = await checkLoginStatus(); // 🔐 check if user is logged in
+    const user = await checkLoginStatus();
 
     document.getElementById("nav").innerHTML = `
         <div class="container-fluid p-0">

@@ -36,12 +36,40 @@ export function renderRegisterPage() {
 
     document.getElementById("backToLoginBtn").addEventListener("click", () => {
         import("./login.js").then(module => module.renderLoginPage());
-        
+
     });
 
     document.getElementById("register-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-        // TODO: Submit registration to your backend when ready
-        alert("🛠 Registration logic coming soon!");
+
+        const data = {
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value,
+            email: document.getElementById("email").value,
+            username: document.getElementById("username").value,
+            passwordHash: document.getElementById("password").value,
+        };
+
+        try {
+            const res = await fetch("http://localhost:8080/api/auth/register", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data),
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.error || "Registration failed");
+            }
+
+            alert("✅ Registration successful! Please log in.");
+            import("./login.js").then(module => module.renderLoginPage());
+
+        } catch (err) {
+            const errorDiv = document.getElementById("register-error");
+            errorDiv.textContent = err.message;
+            errorDiv.style.display = "block";
+        }
     });
+
 }

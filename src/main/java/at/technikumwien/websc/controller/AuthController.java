@@ -1,8 +1,9 @@
 package at.technikumwien.websc.controller;
 
-import at.technikumwien.websc.LoginRequest;
 import at.technikumwien.websc.User;
 import at.technikumwien.websc.UserRepository;
+import at.technikumwien.websc.dto.LoginRequest;
+import at.technikumwien.websc.dto.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class AuthController {
         session.invalidate();
         return ResponseEntity.ok(Map.of("message", "Logged out"));
     }
-    
+
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -64,4 +65,26 @@ public class AuthController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        if (userRepository.existsByEmailIgnoreCase(request.email())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email already in use"));
+        }
+
+        if (userRepository.existsByUsernameIgnoreCase(request.username())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username already taken"));
+        }
+
+        User newUser = new User(
+                request.firstName(),
+                request.lastName(),
+                request.email(),
+                request.username(),
+                request.passwordHash(), // 🛡 Optional: hash this later
+                User.Role.ROLE_CUSTOMER
+        );
+
+        userRepository.save(newUser);
+        return ResponseEntity.ok(Map.of("message", "Registration successful"));
+    }
 }
