@@ -10,14 +10,17 @@ export async function renderNavBar() {
     const user = await checkLoginStatus(); // 🔐 check if user is logged in
 
     document.getElementById("nav").innerHTML = `
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <img src="static/img/logo.webp" alt="Logo" width="100px">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="container-fluid p-0">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <img src="static/img/logo.webp" alt="Logo" width="100px">
+                        <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item"><button id="homeBtn" class="nav-link">Home</button></li>
                         <li class="nav-item"><button id="productsBtn" class="nav-link">Products</button></li>
@@ -32,9 +35,18 @@ export async function renderNavBar() {
                         `}
                     </ul>
                 </div>
-            </div>
-        </nav>
+                    ${user ? `
+                        <span class="navbar-text me-3">
+                            Logged in as <strong>${user.username}</strong>
+                        </span>
+                    ` : ''}
+                </div>
+    
+                
+            </nav>
+        </div>
     `;
+
 
     setupNavigation();
 }
