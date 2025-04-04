@@ -126,13 +126,13 @@ public class TransactionalDataInitializer implements CommandLineRunner {
 
     private void seedUsers() {
         if (userRepository.count() > 0) return;
-        userRepository.save(new User("Hans", "Müller", "hans.mueller@gmail.com", "asdjhouahdfoho", User.Role.ADMIN));
-        userRepository.save(new User("Anna", "Schmidt", "anna.schmidt@gmail.com", "asdkjhsd898sdhs", User.Role.CUSTOMER));
-        userRepository.save(new User("John", "Doe", "john.doe@example.com", "password12345", User.Role.CUSTOMER));
-        userRepository.save(new User("Maria", "Weber", "maria.weber@gmail.com", "fhnfgh321asdf", User.Role.CUSTOMER));
-        userRepository.save(new User("David", "Klein", "david.klein@example.com", "qw34fd6gh7jds", User.Role.CUSTOMER));
-        userRepository.save(new User("Laura", "Meyer", "laura.meyer@gmail.com", "kljhasdf654", User.Role.CUSTOMER));
-        userRepository.save(new User("Peter", "Schneider", "peter.schneider@gmail.com", "kjhgf8d9k1js", User.Role.CUSTOMER));
+        userRepository.save(new User("Hans", "Müller", "hans.mueller@gmail.com", "hans123", "hanspw", User.Role.ROLE_ADMIN));
+        userRepository.save(new User("Anna", "Schmidt", "anna.schmidt@gmail.com", "anna.schmidt", "asdkjhsd898sdhs", User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("John", "Doe", "john.doe@example.com", "johndoe", "password12345", User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("Maria", "Weber", "maria.weber@gmail.com", "mariaw", "fhnfgh321asdf", User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("David", "Klein", "david.klein@example.com", "david.klein", "qw34fd6gh7jds", User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("Laura", "Meyer", "laura.meyer@gmail.com", "lauram", "kljhasdf654", User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("Peter", "Schneider", "peter.schneider@gmail.com", "peters", "kjhgf8d9k1js", User.Role.ROLE_CUSTOMER));
     }
 
 }

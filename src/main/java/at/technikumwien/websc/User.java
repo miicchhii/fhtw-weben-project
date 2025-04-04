@@ -1,5 +1,6 @@
 package at.technikumwien.websc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,24 +26,31 @@ public class User {
     @Column(nullable = false, length = 50, unique = true)
     private String email;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @JsonIgnore
     @Column(nullable = false)
-    private String passwordHash;  // Hashed password storage
+    private String password;  // Hashed password storage
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private Role role;
 
-    public User(String firstName, String lastName, String email, String passwordHash, Role role) {
-        this(null, firstName, lastName, email, passwordHash, role);
+    public User(String firstName, String lastName, String email, String username, String passwordHash, Role role) {
+        this(null, firstName, lastName, email, username, passwordHash, role);
     }
 
-    public User(String firstName, String lastName, String email, String passwordHash) {
-        this(null, firstName, lastName, email, passwordHash, Role.CUSTOMER);
+    public User(String firstName, String lastName, String email, String username, String passwordHash) {
+        this(null, firstName, lastName, email, username, passwordHash, Role.ROLE_CUSTOMER);
     }
 
+    public Object getPassword() {
+        return password;
+    }
 
     public enum Role {
-        CUSTOMER,
-        ADMIN
+        ROLE_CUSTOMER,
+        ROLE_ADMIN
     }
 }

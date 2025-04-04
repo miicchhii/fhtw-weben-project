@@ -21,7 +21,9 @@ export function renderUserManagementPage(){
             url += `?search=${encodeURIComponent(searchTerm)}`;
         }
 
-        fetch(url)
+        fetch(url, {
+            credentials: "include"
+        })
             .then(response => response.json())
             .then(users => {
                 const userCards = users.map(user => `
