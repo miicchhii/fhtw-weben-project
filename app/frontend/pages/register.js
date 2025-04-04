@@ -4,7 +4,7 @@ export function renderRegisterPage() {
             <div class="card shadow p-4" style="width: 100%; max-width: 500px;">
                 <h3 class="text-center mb-4">Register</h3>
                 <form id="register-form">
-                    <div class="mb-3">
+                    <div class="mb-3"> 
                         <label for="firstName" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="firstName" required />
                     </div>
@@ -36,6 +36,7 @@ export function renderRegisterPage() {
 
     document.getElementById("backToLoginBtn").addEventListener("click", () => {
         import("./login.js").then(module => module.renderLoginPage());
+        
     });
 
     document.getElementById("register-form").addEventListener("submit", async (e) => {

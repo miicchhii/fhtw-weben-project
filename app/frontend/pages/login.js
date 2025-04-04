@@ -1,5 +1,5 @@
 import {renderNavBar} from "../ui/navbar.js";
-import { renderRegisterPage } from "../pages/register.js";
+import {renderRegisterPage} from "../pages/register.js";
 
 
 export function renderLoginPage() {
@@ -38,9 +38,9 @@ export function renderLoginPage() {
         try {
             const loginResponse = await fetch("http://localhost:8080/api/auth/login", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 credentials: "include",
-                body: JSON.stringify({ login, passwordHash }),
+                body: JSON.stringify({login, passwordHash}),
             });
 
             if (!loginResponse.ok) throw new Error("Login failed");
@@ -71,8 +71,6 @@ export function renderLoginPage() {
             errorDiv.textContent = err.message;
             errorDiv.style.display = "block";
         }
-
-
 
     });
 
