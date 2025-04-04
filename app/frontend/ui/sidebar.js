@@ -1,4 +1,4 @@
-console.log("sidebar.js wurde geladen");
+import { fetchProductsByCategory } from "../pages/products.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -9,8 +9,6 @@ export function renderSidebar() {
         </ul>
     `;
 }
-
-
 
 export function renderProductsSidebar() {
     fetch('http://localhost:8080/api/categories')
@@ -50,6 +48,8 @@ export function renderProductsSidebar() {
             fetchProductsByCategory(categoryId);
         }
     });
+
+
 }
 
 

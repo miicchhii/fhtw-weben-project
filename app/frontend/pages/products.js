@@ -31,28 +31,6 @@ export function renderProductsPage() {
             });
     }
 
-
-
-    //display Products (for product search and filter by category (sidebar))
-    function displayProducts(products) {
-        const productCards = products.map(product => `
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                <div class="card">
-                    <img src="${product.imageUrl || 'default-image.jpg'}" class="card-img-top" alt="${product.name}">
-                    <div class="card-body">
-                        <h5 class="card-title">${product.name}</h5>
-                        <p class="card-text">${product.description}</p>
-                        <p class="card-text"><strong>$${product.price}</strong></p>
-                        <a href="#" class="btn btn-primary" data-product-id="${product.id}">View Details</a>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-
-        document.getElementById("product-list").innerHTML = productCards || "<p>No products found.</p>";
-    }
-
-
     // Initial load
     fetchProducts();
 
@@ -71,4 +49,47 @@ export function renderProductsPage() {
             renderProductDetailPage(productId);
         }
     });
+}
+
+export function fetchProductsByCategory(categoryId){
+    const productList = document.getElementById("product-list");
+    productList.innerHTML = '<div class="text-center">Loading products...</div>';
+
+    let url = `http://localhost:8080/api/products?category.id=${categoryId}`;
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+        })
+        .then(products => {
+            if (products.length === 0) {
+                productList.innerHTML = '<div class="alert alert-info">No products in this category</div>';
+            } else {
+                displayProducts(products);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+            productList.innerHTML = '<div class="alert alert-danger">Error loading products</div>';
+        });
+}
+
+//display Products (for product search and filter by category (sidebar))
+function displayProducts(products) {
+    const productCards = products.map(product => `
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card">
+                    <img src="${product.imageUrl || 'default-image.jpg'}" class="card-img-top" alt="${product.name}">
+                    <div class="card-body">
+                        <h5 class="card-title">${product.name}</h5>
+                        <p class="card-text">${product.description}</p>
+                        <p class="card-text"><strong>$${product.price}</strong></p>
+                        <a href="#" class="btn btn-primary" data-product-id="${product.id}">View Details</a>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+    document.getElementById("product-list").innerHTML = productCards || "<p>No products found.</p>";
 }
