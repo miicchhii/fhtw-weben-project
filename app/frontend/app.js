@@ -1,5 +1,5 @@
 import {renderNavBar} from './ui/navbar.js';
-import {renderSidebar} from './ui/sidebar.js';
+import {renderProductsSidebar, renderSidebar} from './ui/sidebar.js';
 import {renderHomePage} from './pages/home.js';
 import {renderProductsPage} from './pages/products.js';
 import {renderAccountPage} from "./pages/account.js";
@@ -20,7 +20,7 @@ function init() {
 
     // Render sections
     renderNavBar();
-    renderSidebar();
+    //renderSidebar();
 
     // Set up event listeners for page navigation
     setupNavigation();
@@ -52,15 +52,19 @@ function showPage(page) {
     switch (page) {
         case "home":
             renderHomePage();
+            renderSidebar()
             break;
         case "products":
             renderProductsPage();
+            renderProductsSidebar();
             break;
         case "account":
             renderAccountPage();
+            renderSidebar()
             break;
         default:
             renderHomePage(); // Fallback to home if unknown page
+            renderSidebar()
             break;
     }
 }

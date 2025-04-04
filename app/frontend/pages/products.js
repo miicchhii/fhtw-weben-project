@@ -1,5 +1,6 @@
 import { renderProductDetailPage } from "./product.js";
 
+
 export function renderProductsPage() {
     document.getElementById("content").innerHTML = `
         <div class="container mt-4">
@@ -13,6 +14,8 @@ export function renderProductsPage() {
             </div>
         </div>
     `;
+
+
 
     function fetchProducts(searchTerm = "") {
         let url = 'http://localhost:8080/api/products';
@@ -47,6 +50,8 @@ export function renderProductsPage() {
 
     // Initial load
     fetchProducts();
+
+
 
     // Listen for search input changes
     document.getElementById("search-input").addEventListener("input", (event) => {
