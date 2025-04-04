@@ -46,6 +46,7 @@ export function renderProductsSidebar() {
             event.preventDefault();
             const categoryId = event.target.getAttribute("data-category-id");
             fetchProductsByCategory(categoryId);
+            console.log("Sidbar.js categoryID:", categoryId);
         }
     });
 

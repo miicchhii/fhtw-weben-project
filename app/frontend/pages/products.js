@@ -52,10 +52,11 @@ export function renderProductsPage() {
 }
 
 export function fetchProductsByCategory(categoryId){
+
     const productList = document.getElementById("product-list");
     productList.innerHTML = '<div class="text-center">Loading products...</div>';
 
-    let url = `http://localhost:8080/api/products?category.id=${categoryId}`;
+    let url = `http://localhost:8080/api/products/filter?categoryId=${categoryId}`;
 
     fetch(url)
         .then(response => {

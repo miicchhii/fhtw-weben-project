@@ -12,6 +12,10 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    // Constructor
+    public ProductController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
     // Get all products or filter by search term
     @GetMapping
     public List<Product> getProducts(@RequestParam(value = "search", required = false) String searchTerm) {
@@ -29,4 +33,16 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Get a product by Category
+    @GetMapping("/filter")
+    public List<Product> getProductsByCategory(@RequestParam(required = false) Long categoryId) {
+        if (categoryId != null) {
+            return productRepository.findByCategoryId(categoryId);
+        } else {
+            return productRepository.findAll();
+        }
+    }
 }
+
+
+
