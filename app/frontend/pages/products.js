@@ -1,4 +1,5 @@
 import { renderProductDetailPage } from "./product.js";
+import {BACKEND_BASE_URL} from "../util/rest.js";
 
 export function renderProductsPage() {
     document.getElementById("content").innerHTML = `
@@ -15,7 +16,7 @@ export function renderProductsPage() {
     `;
 
     function fetchProducts(searchTerm = "") {
-        let url = 'http://localhost:8080/api/products';
+        let url = BACKEND_BASE_URL+'/api/products';
         if (searchTerm) {
             url += `?search=${encodeURIComponent(searchTerm)}`;
         }
