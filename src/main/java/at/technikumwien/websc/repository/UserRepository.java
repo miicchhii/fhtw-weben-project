@@ -1,5 +1,6 @@
-package at.technikumwien.websc;
+package at.technikumwien.websc.repository;
 
+import at.technikumwien.websc.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

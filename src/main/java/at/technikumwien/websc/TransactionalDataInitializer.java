@@ -1,5 +1,8 @@
 package at.technikumwien.websc;
 
+import at.technikumwien.websc.repository.CategoryRepository;
+import at.technikumwien.websc.repository.ProductRepository;
+import at.technikumwien.websc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

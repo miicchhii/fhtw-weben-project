@@ -1,7 +1,7 @@
 package at.technikumwien.websc.controller;
 
 import at.technikumwien.websc.User;
-import at.technikumwien.websc.UserRepository;
+import at.technikumwien.websc.repository.UserRepository;
 import at.technikumwien.websc.dto.LoginRequest;
 import at.technikumwien.websc.dto.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
