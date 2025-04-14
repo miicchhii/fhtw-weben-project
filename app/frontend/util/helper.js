@@ -1,6 +1,8 @@
+import {BACKEND_BASE_URL} from "../util/rest.js";
+
 export async function checkLoginStatus() {
     try {
-        const res = await fetch("http://localhost:8080/api/auth/me", {
+        const res = await fetch("BACKEND_BASE_URL/api/auth/me", {
             credentials: "include",
         });
 
