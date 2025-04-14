@@ -58,7 +58,7 @@ export function fetchProductsByCategory(categoryId){
     const productList = document.getElementById("product-list");
     productList.innerHTML = '<div class="text-center">Loading products...</div>';
 
-    let url = `http://localhost:8080/api/products/filter?categoryId=${categoryId}`;
+    let url = BACKEND_BASE_URL+`/api/products/filter?categoryId=${categoryId}`;
 
     fetch(url)
         .then(response => {
@@ -83,7 +83,7 @@ function displayProducts(products) {
     const productCards = products.map(product => `
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card">
-                    <img src="${product.imageUrl || 'default-image.jpg'}" class="card-img-top" alt="${product.name}">
+                    <img src="${product.imageUrl || '../static/img/default-image.jpg'}" class="card-img-top" alt="${product.name}">
                     <div class="card-body">
                         <h5 class="card-title">${product.name}</h5>
                         <p class="card-text">${product.description}</p>
