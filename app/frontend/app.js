@@ -1,6 +1,9 @@
 import {renderNavBar} from './ui/navbar.js';
-import {renderSidebar} from './ui/sidebar.js';
+import {renderProductsSidebar, renderSidebar} from './ui/sidebar.js';
 import {renderHomePage} from './pages/home.js';
+import {renderProductsPage} from './pages/products.js';
+import {renderAccountPage} from "./pages/account.js";
+
 
 document.addEventListener("DOMContentLoaded", init);
 
