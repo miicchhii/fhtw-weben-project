@@ -1,4 +1,5 @@
 import { fetchProductsByCategory } from "../pages/products.js";
+import {BACKEND_BASE_URL} from "../util/rest.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -11,7 +12,7 @@ export function renderSidebar() {
 }
 
 export function renderProductsSidebar() {
-    fetch('http://localhost:8080/api/categories')
+    fetch( BACKEND_BASE_URL+'/api/categories')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);

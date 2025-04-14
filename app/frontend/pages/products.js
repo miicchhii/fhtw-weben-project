@@ -1,4 +1,7 @@
 import { renderProductDetailPage } from "./product.js";
+import {renderProductsSidebar} from "../ui/sidebar.js";
+import {BACKEND_BASE_URL} from "../util/rest.js";
+
 
 export function renderProductsPage() {
     document.getElementById("content").innerHTML = `
@@ -13,7 +16,7 @@ export function renderProductsPage() {
             </div>
         </div>
     `;
-
+    renderProductsSidebar();
 
     function fetchProducts(searchTerm = "") {
         let url = BACKEND_BASE_URL+'/api/products';

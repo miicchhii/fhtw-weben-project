@@ -4,6 +4,7 @@ import {renderAccountPage} from "../pages/account.js";
 import {renderLoginPage} from "../pages/login.js";
 import {renderUserManagementPage} from "../pages/admin/users.js";
 import {checkLoginStatus} from "../util/helper.js"
+import {BACKEND_BASE_URL} from "../util/rest.js";
 
 
 export async function renderNavBar() {
