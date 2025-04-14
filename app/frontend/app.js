@@ -17,7 +17,7 @@ function init() {
         </div>`;
 
     // Render sections
-    renderNavBar();
+    renderNavBar()
     renderSidebar();
 
     // Default page

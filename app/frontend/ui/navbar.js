@@ -5,6 +5,7 @@ import {renderLoginPage} from "../pages/login.js";
 import {renderUserManagementPage} from "../pages/admin/users.js";
 import {checkLoginStatus} from "../util/helper.js"
 import {BACKEND_BASE_URL} from "../util/rest.js";
+import {renderSidebar} from "./sidebar.js";
 
 
 export async function renderNavBar() {
@@ -54,21 +55,41 @@ export async function renderNavBar() {
 
 
 function setupNavigation() {
-    document.getElementById("productsBtn")?.addEventListener("click", renderProductsPage);
-    document.getElementById("homeBtn")?.addEventListener("click", renderHomePage);
-    document.getElementById("accountBtn")?.addEventListener("click", renderAccountPage);
-    document.getElementById("loginBtn")?.addEventListener("click", renderLoginPage);
-    document.getElementById("userMgmtBtn")?.addEventListener("click", renderUserManagementPage);
+    document.getElementById("productsBtn")?.addEventListener("click", () => {
+        renderProductsPage();
+        renderSidebar();
+    });
+
+    document.getElementById("homeBtn")?.addEventListener("click", () => {
+        renderHomePage();
+        renderSidebar();
+    });
+
+    document.getElementById("accountBtn")?.addEventListener("click", () => {
+        renderAccountPage();
+        renderSidebar();
+    });
+
+    document.getElementById("loginBtn")?.addEventListener("click", () => {
+        renderLoginPage();
+        renderSidebar();
+    });
+
+    document.getElementById("userMgmtBtn")?.addEventListener("click", () => {
+        renderUserManagementPage();
+        renderSidebar();
+    });
+
 
     document.getElementById("logoutBtn")?.addEventListener("click", async function () {
         try {
-            await fetch("http://localhost:8080/api/auth/logout", {
+            await fetch(BACKEND_BASE_URL+"/api/auth/logout", {
                 method: "POST",
                 credentials: "include"
             });
             console.log("✅ Logged out");
             renderLoginPage();        // redirect to login
-            renderNavBar();           // re-render navbar (login button shows)
+            await renderNavBar();           // re-render navbar (login button shows)
         } catch (err) {
             console.error("Logout failed:", err);
         }

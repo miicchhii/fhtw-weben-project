@@ -1,3 +1,5 @@
+import {BACKEND_BASE_URL} from "../util/rest.js";
+
 export function renderRegisterPage() {
     document.getElementById("content").innerHTML = `
         <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
@@ -51,7 +53,7 @@ export function renderRegisterPage() {
         };
 
         try {
-            const res = await fetch("http://localhost:8080/api/auth/register", {
+            const res = await fetch(BACKEND_BASE_URL+"/api/auth/register", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(data),

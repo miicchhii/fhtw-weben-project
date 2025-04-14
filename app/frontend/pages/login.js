@@ -1,5 +1,6 @@
 import {renderNavBar} from "../ui/navbar.js";
 import {renderRegisterPage} from "../pages/register.js";
+import {BACKEND_BASE_URL} from "../util/rest.js";
 
 
 export function renderLoginPage() {
@@ -36,7 +37,7 @@ export function renderLoginPage() {
         const passwordHash = document.getElementById("password").value; // hash if needed
 
         try {
-            const loginResponse = await fetch("http://localhost:8080/api/auth/login", {
+            const loginResponse = await fetch(BACKEND_BASE_URL+"/api/auth/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 credentials: "include",
@@ -46,9 +47,9 @@ export function renderLoginPage() {
             if (!loginResponse.ok) throw new Error("Login failed");
 
             console.log("✅ Login successful");
-            renderNavBar();
+            await renderNavBar();
 
-            const userRes = await fetch("http://localhost:8080/api/auth/me", {
+            const userRes = await fetch(BACKEND_BASE_URL+"/api/auth/me", {
                 method: "GET",
                 credentials: "include",
             });

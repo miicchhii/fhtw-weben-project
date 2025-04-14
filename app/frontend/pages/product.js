@@ -1,8 +1,9 @@
 import {renderProductsPage} from "./products.js";
+import {BACKEND_BASE_URL} from "../util/rest.js";
 
 export function renderProductDetailPage(productId) {
     // Fetch product details by ID
-    fetch(`http://localhost:8080/api/products/${productId}`)
+    fetch(BACKEND_BASE_URL+`/api/products/${productId}`)
         .then(response => response.json())
         .then(product => {
             // Generate HTML for product details
@@ -11,7 +12,7 @@ export function renderProductDetailPage(productId) {
                     <h1>${product.name}</h1>
                     <div class="row">
                         <div class="col-md-6">
-                            <img src="${product.imageUrl || 'default-image.jpg'}" class="img-fluid" alt="${product.name}">
+                            <img src="${product.imageUrl || '../static/img/default-image.jpg'}" class="img-fluid" alt="${product.name}">
                         </div>
                         <div class="col-md-6">
                             <h4>Description:</h4>
