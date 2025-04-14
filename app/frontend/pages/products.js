@@ -3,7 +3,7 @@ import {renderProductsSidebar} from "../ui/sidebar.js";
 import {BACKEND_BASE_URL} from "../util/rest.js";
 
 
-export function renderProductsPage() {
+export async function renderProductsPage() {
     document.getElementById("content").innerHTML = `
         <div class="container mt-4">
             <h1>Products</h1>
@@ -55,7 +55,13 @@ export function renderProductsPage() {
 
 export function fetchProductsByCategory(categoryId){
 
-    const productList = document.getElementById("product-list");
+    let productList = document.getElementById("product-list");
+
+    if(productList==null){
+        console.warn("productList is null. Are you on the products page?");
+        return;
+    }
+
     productList.innerHTML = '<div class="text-center">Loading products...</div>';
 
     let url = BACKEND_BASE_URL+`/api/products/filter?categoryId=${categoryId}`;

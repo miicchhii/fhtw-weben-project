@@ -1,7 +1,9 @@
-package at.technikumwien.websc;
+package at.technikumwien.websc.controller;
 
 import java.util.List;
 
+import at.technikumwien.websc.Category;
+import at.technikumwien.websc.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
