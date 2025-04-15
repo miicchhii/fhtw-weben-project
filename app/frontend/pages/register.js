@@ -26,6 +26,10 @@ export function renderRegisterPage() {
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" required />
                     </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" required />
+                    </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-success">Create Account</button>
                         <button type="button" id="backToLoginBtn" class="btn btn-secondary">Back to Login</button>
@@ -41,15 +45,34 @@ export function renderRegisterPage() {
 
     });
 
+
+
+
+
     document.getElementById("register-form").addEventListener("submit", async (e) => {
         e.preventDefault();
+
+
+        //VALIDATION
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+            const errorDiv = document.getElementById("register-error");
+            errorDiv.textContent = "Passwords do not match.";
+            errorDiv.style.display = "block";
+            return;
+        }
+
+
+        //VALIDATION
 
         const data = {
             firstName: document.getElementById("firstName").value,
             lastName: document.getElementById("lastName").value,
             email: document.getElementById("email").value,
             username: document.getElementById("username").value,
-            passwordHash: document.getElementById("password").value,
+            passwordHash: password,
         };
 
         try {
