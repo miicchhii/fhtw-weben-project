@@ -1,4 +1,6 @@
 import {BACKEND_BASE_URL} from "../util/rest.js";
+import { sanitizeInput } from "../util/helper.js";
+
 
 export function renderRegisterPage() {
     document.getElementById("content").innerHTML = `
@@ -53,27 +55,45 @@ export function renderRegisterPage() {
         e.preventDefault();
 
 
-        //VALIDATION
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+        const errorDiv = document.getElementById("register-error");
+        errorDiv.style.display = "none"; // Reset error visibility
+        errorDiv.textContent = ""; // Reset previous error messages
 
-        if (password !== confirmPassword) {
-            const errorDiv = document.getElementById("register-error");
-            errorDiv.textContent = "Passwords do not match.";
+        // Gather and sanitize inputs
+        const firstName = sanitizeInput(document.getElementById("firstName").value);
+        const lastName = sanitizeInput(document.getElementById("lastName").value);
+        const email = sanitizeInput(document.getElementById("email").value);
+        const username = sanitizeInput(document.getElementById("username").value);
+        const password = sanitizeInput(document.getElementById("password").value);
+        const confirmPassword = sanitizeInput(document.getElementById("confirmPassword").value);
+
+        // Validate inputs
+        const errors = [];
+
+        if (!firstName) errors.push("First name is required.");
+        if (!lastName) errors.push("Last name is required.");
+        if (!email) errors.push("Email is required.");
+        if (email && !/^\S+@\S+\.\S+$/.test(email)) errors.push("Invalid email address.");
+        if (!username) errors.push("Username is required.");
+        if (username && username.length < 3) errors.push("Username must be at least 3 characters long.");
+        if (!password) errors.push("Password is required.");
+        if (password && password.length < 8) errors.push("Password must be at least 8 characters.");
+        if (password !== confirmPassword) errors.push("Passwords do not match.");
+
+        if (errors.length > 0) {
+            errorDiv.innerHTML = errors.join("<br>");
             errorDiv.style.display = "block";
             return;
         }
 
-
-        //VALIDATION
-
         const data = {
-            firstName: document.getElementById("firstName").value,
-            lastName: document.getElementById("lastName").value,
-            email: document.getElementById("email").value,
-            username: document.getElementById("username").value,
+            firstName,
+            lastName,
+            email,
+            username,
             passwordHash: password,
         };
+
 
         try {
             const res = await fetch(BACKEND_BASE_URL+"/api/auth/register", {
