@@ -16,3 +16,14 @@ export async function checkLoginStatus() {
 export function formatPrice(price) {
     return price.toFixed(2) + "€"; // Two decimals + euro sign
 }
+
+//VALIDATIONS
+
+export function sanitizeInput(input) {
+    return input.trim()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
