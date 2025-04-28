@@ -12,3 +12,18 @@ export async function checkLoginStatus() {
         return null;
     }
 }
+
+
+//VALIDATIONS
+
+export function sanitizeInput(input) {
+    return input.trim()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+
