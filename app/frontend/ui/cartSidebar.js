@@ -105,7 +105,8 @@ export async function loadCartSidebar() {
     const user = await checkLoginStatus();
     const container = document.getElementById("cartItemsContainer");
     const cartItemCountEl = document.getElementById("cartItemCount");
-    const cartTotalEl = document.getElementById("cartTotal")
+    const cartTotalEl = document.getElementById("cartTotal");
+    const cartButtonArea = document.getElementById("cartButtonArea");
 
     let cartItems = [];
 
@@ -180,13 +181,32 @@ export async function loadCartSidebar() {
 
     cartItemCountEl.innerHTML = "(" + cartItemCount + ")";
 
-    if (total >= 0) {
+    if (total > 0) {
         cartTotalEl.innerHTML = "<strong>Total: " + formatPrice(total) + "</strong>";
+        if (user) {
+            cartButtonArea.innerHTML = `<button className="btn btn-success mt-3" id="placeOrderBtn">Place Order</button>`;
+
+            document.getElementById("placeOrderBtn").addEventListener("click", async () => {
+                try {
+                    const response = await fetch(BACKEND_BASE_URL + "/api/orders", {
+                        method: "POST",
+                        credentials: "include"
+                    });
+                    if (!response.ok) {
+                        throw new Error("Failed to place order.");
+                    }
+                    alert("✅ Order placed successfully!");
+                    await loadCartSidebar(); // Cart will be empty now
+                } catch (err) {
+                    console.error("Order placement failed:", err);
+                }
+            });
+        }
     } else {
-        cartItemCountEl.innerHTML = "<strong>Your Cart is empty!</strong>";
+        cartTotalEl.innerHTML = "<strong>Your Cart is empty!</strong>";
+        cartButtonArea.innerHTML = ``;
     }
 }
-
 
 export async function removeItem(productId) {
     const user = await checkLoginStatus();

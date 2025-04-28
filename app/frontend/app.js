@@ -18,6 +18,7 @@ async function init() {
                   <div id="cartHeader"></div>  
                   <div id="cartItemsContainer" class="p-3"></div>
                   <div class="p-3 border-bottom" id="cartTotal"></div>
+                  <div class="p-3 border-bottom" id="cartButtonArea"></div>
                 </div>
                 <div id="cartOverlay" class="cart-overlay"></div>
             </div>
