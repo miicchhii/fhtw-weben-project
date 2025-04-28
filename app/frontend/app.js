@@ -1,9 +1,7 @@
 import {renderNavBar} from './ui/navbar.js';
 import {renderSidebar} from './ui/sidebar.js';
 import {renderHomePage} from './pages/home.js';
-import {loadCartSidebar, toggleCartSidebar} from "./ui/cartSidebar.js";
-import {checkLoginStatus} from "./util/helper.js"; // << import missing
-import {BACKEND_BASE_URL} from "./util/rest.js"; // << import missing
+import {emptyCart, loadCartSidebar, toggleCartSidebar} from "./ui/cartSidebar.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -40,28 +38,5 @@ async function init() {
     renderHomePage();
 
     // Load cart on startup
-    await loadCartSidebar();
-}
-
-export async function emptyCart() {
-    const user = await checkLoginStatus();
-
-    if (user) {
-        try {
-            const response = await fetch(BACKEND_BASE_URL + "/api/cart", {
-                method: "DELETE",
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to empty server cart.");
-            }
-        } catch (error) {
-            console.error("Error emptying cart:", error);
-        }
-    } else {
-        localStorage.removeItem("cart");
-    }
-
     await loadCartSidebar();
 }

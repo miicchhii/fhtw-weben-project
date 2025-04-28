@@ -12,7 +12,7 @@ export async function addToCart(productId) {
     const user = await checkLoginStatus();
 
     if (user) {
-        // User is logged in → use backend API
+        // Server-side cart logic (already correct)
         try {
             const response = await fetch(BACKEND_BASE_URL + "/api/cart/items", {
                 method: "POST",
@@ -30,25 +30,42 @@ export async function addToCart(productId) {
                 throw new Error("Failed to add item to cart on server.");
             }
 
-            await loadCartSidebar(); // Refresh sidebar
+            await loadCartSidebar();
         } catch (err) {
             console.error("API error while adding to cart:", err);
         }
     } else {
-        // Guest → localStorage
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
-        const existing = cart.find((item) => item.productId == productId);
+        // Guest cart: fetch full product info
+        try {
+            const res = await fetch(BACKEND_BASE_URL + `/api/products/${productId}`);
+            if (!res.ok) {
+                throw new Error("Failed to fetch product info.");
+            }
 
-        if (existing) {
-            existing.quantity += 1;
-        } else {
-            cart.push({productId: parseInt(productId), quantity: 1});
+            const product = await res.json();
+
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existing = cart.find((item) => item.productId == productId);
+
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({
+                    productId: product.id,
+                    quantity: 1,
+                    productName: product.name,
+                    productPrice: product.price
+                });
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            await loadCartSidebar();
+        } catch (err) {
+            console.error("Error fetching product for guest cart:", err);
         }
-
-        localStorage.setItem("cart", JSON.stringify(cart));
-        await loadCartSidebar();
     }
 }
+
 
 export async function emptyCart() {
     const user = await checkLoginStatus();
@@ -188,7 +205,8 @@ export async function removeItem(productId) {
     } else {
         // Remove from guest cart
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        cart = cart.filter(item => item.productId !== productId);
+        cart = cart.filter(item => item.productId !== parseInt(productId));
+
         localStorage.setItem("cart", JSON.stringify(cart));
     }
 
