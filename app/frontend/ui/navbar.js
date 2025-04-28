@@ -42,6 +42,7 @@ export async function renderNavBar() {
                             Logged in as <strong>${user.username}</strong>
                         </span>
                     ` : ''}
+                    
                 </div>
     
                 
