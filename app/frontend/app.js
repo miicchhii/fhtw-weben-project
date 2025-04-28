@@ -1,5 +1,5 @@
 import {renderNavBar} from './ui/navbar.js';
-import {renderProductsSidebar, renderSidebar} from './ui/sidebar.js';
+import {renderProductsSidebar, renderSidebar, renderUserSidebar} from './ui/sidebar.js';
 import {renderHomePage} from './pages/home.js';
 
 

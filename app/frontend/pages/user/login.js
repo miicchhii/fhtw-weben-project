@@ -1,6 +1,6 @@
-import {renderNavBar} from "../ui/navbar.js";
-import {renderRegisterPage} from "../pages/register.js";
-import {BACKEND_BASE_URL} from "../util/rest.js";
+import {renderNavBar} from "../../ui/navbar.js";
+import {renderRegisterPage} from "./register.js";
+import {BACKEND_BASE_URL} from "../../util/rest.js";
 
 
 export function renderLoginPage() {

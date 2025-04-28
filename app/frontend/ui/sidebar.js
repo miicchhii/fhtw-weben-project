@@ -1,5 +1,6 @@
-import { fetchProductsByCategory } from "../pages/products.js";
+
 import {BACKEND_BASE_URL} from "../util/rest.js";
+import {renderChangePasswordPage} from "../pages/user/password.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -53,5 +54,23 @@ export function renderProductsSidebar() {
 
 
 }
+
+//export function renderUserSidebar() {
+export function renderUserSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.innerHTML = `
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a href="#" id="changePasswordSidebarLink">Change Password</a>
+            </li>
+        </ul>
+    `;
+
+    document.getElementById("changePasswordSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        renderChangePasswordPage();
+    });
+}
+
 
 
