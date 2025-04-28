@@ -87,4 +87,42 @@ public class AuthController {
         userRepository.save(newUser);
         return ResponseEntity.ok(Map.of("message", "Registration successful"));
     }
+
+    //PASSWORD
+
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> payload, HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            return ResponseEntity.status(401).body(Map.of("error", "Not logged in"));
+        }
+
+        String oldPassword = payload.get("oldPassword");
+        String newPassword = payload.get("newPassword");
+
+
+        if (oldPassword == null || oldPassword.isBlank() || newPassword == null || newPassword.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Old and new password must be provided"));
+        }
+
+
+        if (!user.getPassword().equals(oldPassword)) {
+            return ResponseEntity.status(400).body(Map.of("error", "Old password is incorrect"));
+        }
+
+
+        user.setPassword(newPassword); // 🛡 später: Hier PasswordEncoder verwenden!
+
+        userRepository.save(user);
+
+
+        session.setAttribute("user", user);
+
+        return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+    }
+
+
+
 }
