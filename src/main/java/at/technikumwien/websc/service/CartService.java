@@ -1,10 +1,12 @@
 package at.technikumwien.websc.service;
 
-import at.technikumwien.websc.*;
+import at.technikumwien.websc.Cart;
+import at.technikumwien.websc.CartItem;
+import at.technikumwien.websc.Product;
+import at.technikumwien.websc.User;
 import at.technikumwien.websc.repository.CartItemRepository;
 import at.technikumwien.websc.repository.CartRepository;
 import at.technikumwien.websc.repository.ProductRepository;
-import at.technikumwien.websc.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,4 +59,14 @@ public class CartService {
         cartItemRepository.findByCartAndProduct(cart, product)
                 .ifPresent(cartItemRepository::delete);
     }
+
+    @Transactional
+    public void emptyCart(User user) {
+        Cart cart = getOrCreateCartForUser(user);
+        if (cart.getItems() != null) {
+            cart.getItems().clear();  // Clear all cart items
+            cartRepository.save(cart);
+        }
+    }
+
 }

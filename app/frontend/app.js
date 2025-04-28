@@ -1,8 +1,9 @@
 import {renderNavBar} from './ui/navbar.js';
-import {renderProductsSidebar, renderSidebar} from './ui/sidebar.js';
+import {renderSidebar} from './ui/sidebar.js';
 import {renderHomePage} from './pages/home.js';
-import { toggleCartSidebar, addToCart, loadCartSidebar } from "./ui/cartSidebar.js";
-
+import {loadCartSidebar, toggleCartSidebar} from "./ui/cartSidebar.js";
+import {checkLoginStatus} from "./util/helper.js"; // << import missing
+import {BACKEND_BASE_URL} from "./util/rest.js"; // << import missing
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -16,36 +17,51 @@ async function init() {
                 <div id="content" class="border d-flex flex-column flex-grow-1"></div>
                 <!-- Right Cart Sidebar -->
                 <div id="cartSidebar" class="cart-sidebar">
-                  <div class="cart-header d-flex justify-content-between align-items-center p-3">
-                    <h5 class="mb-0">Your Cart</h5>
-                  </div>
+                  <div id="cartHeader"></div>  
                   <div id="cartItemsContainer" class="p-3"></div>
-                  <div class="p-3 border-top">
-                    <strong>Total Items: <span id="cartTotalCount">0</span></strong>
-                  </div>
+                  <div class="p-3 border-bottom" id="cartTotal"></div>
                 </div>
-                <div id="cartOverlay" class="cart-overlay" onclick="toggleCartSidebar()"></div>
+                <div id="cartOverlay" class="cart-overlay"></div>
             </div>
         </div>`;
 
+    // Attach cart sidebar overlay button
+    document.getElementById("cartOverlay").addEventListener("click", toggleCartSidebar);
+
+    // Attach emptyCart to window so onclick in HTML works
+    window.emptyCart = emptyCart;
+    window.toggleCartSidebar = toggleCartSidebar;
+
     // Render sections
-    await renderNavBar()
+    await renderNavBar();
     renderSidebar();
 
     // Default page
     renderHomePage();
 
-    document.addEventListener("DOMContentLoaded", async () => {
-        // Attach Add to Cart buttons
-        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
-            button.addEventListener("click", () => {
-                const productId = button.dataset.productId;
-                addToCart(productId);
+    // Load cart on startup
+    await loadCartSidebar();
+}
+
+export async function emptyCart() {
+    const user = await checkLoginStatus();
+
+    if (user) {
+        try {
+            const response = await fetch(BACKEND_BASE_URL + "/api/cart", {
+                method: "DELETE",
+                credentials: "include",
             });
-        });
-        // Load cart on startup
-        await loadCartSidebar();
-    });
 
+            if (!response.ok) {
+                throw new Error("Failed to empty server cart.");
+            }
+        } catch (error) {
+            console.error("Error emptying cart:", error);
+        }
+    } else {
+        localStorage.removeItem("cart");
+    }
 
+    await loadCartSidebar();
 }

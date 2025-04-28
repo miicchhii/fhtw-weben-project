@@ -44,6 +44,9 @@ export async function renderNavBar() {
                     ` : ''}
                     
                 </div>
+                <div  class="ml-4">
+                    Cart <span id="cartItemCount"></span>
+                </div>
     
                 
             </nav>
@@ -84,7 +87,7 @@ function setupNavigation() {
 
     document.getElementById("logoutBtn")?.addEventListener("click", async function () {
         try {
-            await fetch(BACKEND_BASE_URL+"/api/auth/logout", {
+            await fetch(BACKEND_BASE_URL + "/api/auth/logout", {
                 method: "POST",
                 credentials: "include"
             });

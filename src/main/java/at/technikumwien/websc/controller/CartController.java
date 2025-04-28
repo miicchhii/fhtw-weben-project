@@ -1,6 +1,7 @@
 package at.technikumwien.websc.controller;
 
-import at.technikumwien.websc.*;
+import at.technikumwien.websc.Cart;
+import at.technikumwien.websc.User;
 import at.technikumwien.websc.dto.CartItemDTO;
 import at.technikumwien.websc.dto.CartItemRequest;
 import at.technikumwien.websc.dto.CartResponse;
@@ -63,4 +64,16 @@ public class CartController {
         cartService.removeCartItem(user, productId);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> emptyCart(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(401).body("Not logged in");
+        }
+
+        cartService.emptyCart(user);
+        return ResponseEntity.noContent().build();
+    }
+
 }

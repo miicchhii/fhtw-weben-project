@@ -2,7 +2,7 @@ import {BACKEND_BASE_URL} from "../util/rest.js";
 
 export async function checkLoginStatus() {
     try {
-        const res = await fetch(BACKEND_BASE_URL+"/api/auth/me", {
+        const res = await fetch(BACKEND_BASE_URL + "/api/auth/me", {
             credentials: "include",
         });
 
@@ -11,4 +11,8 @@ export async function checkLoginStatus() {
     } catch {
         return null;
     }
+}
+
+export function formatPrice(price) {
+    return price.toFixed(2) + "€"; // Two decimals + euro sign
 }
