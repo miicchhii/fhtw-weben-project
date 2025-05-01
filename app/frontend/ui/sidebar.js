@@ -1,6 +1,8 @@
 
 import {BACKEND_BASE_URL} from "../util/rest.js";
 import {renderChangePasswordPage} from "../pages/user/password.js";
+import {renderAccountPage} from "../pages/account.js";
+import {renderProfilePage} from "../pages/user/profile.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -61,16 +63,33 @@ export function renderUserSidebar() {
     sidebar.innerHTML = `
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
+                <a href="#" id="profileSidebarLink">Profile Settings</a>
+            </li>
+            <li class="list-group-item">
                 <a href="#" id="changePasswordSidebarLink">Change Password</a>
+            </li>
+            <li class="list-group-item">
+                <a href="#" id="ordersSidebarLink">My Orders</a>
             </li>
         </ul>
     `;
+
+    document.getElementById("profileSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        
+       renderProfilePage(); // Diese Funktion musst du implementieren
+    });
 
     document.getElementById("changePasswordSidebarLink").addEventListener("click", (e) => {
         e.preventDefault();
         renderChangePasswordPage();
     });
-}
 
+    document.getElementById("ordersSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        alert("Order page is not yet implemented."); // placeholder
+        // renderOrdersPage();
+    });
+}
 
 
