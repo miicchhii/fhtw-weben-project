@@ -70,4 +70,27 @@ public class OrderService {
         }).toList();
     }
 
+    public List<OrderDTO> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+
+        return orders.stream().map(order -> {
+            List<OrderItemDTO> items = order.getItems().stream()
+                    .map(item -> new OrderItemDTO(
+                            item.getProduct().getName(),
+                            item.getQuantity(),
+                            item.getPriceAtPurchase(),
+                            item.getProduct().getId()
+                    ))
+                    .toList();
+
+            return new OrderDTO(
+                    order.getId(),
+                    order.getCreatedAt(),
+                    order.getUser().getFirstName() + " " + order.getUser().getLastName(),
+                    order.getUser().getEmail(),
+                    items
+            );
+        }).toList();
+    }
+
 }

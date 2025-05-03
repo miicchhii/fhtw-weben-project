@@ -1,8 +1,6 @@
 import {BACKEND_BASE_URL} from "../../util/rest.js";
 
-
-export function renderUserManagementPage(){
-    document.getElementById("content").innerHTML = "User Management Page"
+export function renderUserManagementPage() {
     document.getElementById("content").innerHTML = `
         <div class="container mt-4">
             <h1>User Management</h1>
@@ -15,6 +13,7 @@ export function renderUserManagementPage(){
             </div>
         </div>
     `;
+
     function fetchUsers(searchTerm = "") {
         let url = BACKEND_BASE_URL + '/api/users';
         if (searchTerm) {
@@ -48,7 +47,7 @@ export function renderUserManagementPage(){
 
     fetchUsers();
 
-    document.getElementById("search-input").addEventListener("input", (event) =>{
+    document.getElementById("search-input").addEventListener("input", (event) => {
         const query = event.target.value.trim();
         fetchUsers(query);
     })
