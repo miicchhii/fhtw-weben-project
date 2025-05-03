@@ -5,7 +5,7 @@ import {renderLoginPage} from "../pages/user/login.js";
 import {renderUserManagementPage} from "../pages/admin/users.js";
 import {checkLoginStatus} from "../util/helper.js"
 import {BACKEND_BASE_URL} from "../util/rest.js";
-import {renderSidebar, renderUserSidebar} from "./sidebar.js";
+import {renderAdminSidebar, renderSidebar, renderUserSidebar} from "./sidebar.js";
 
 
 export async function renderNavBar() {
@@ -28,7 +28,7 @@ export async function renderNavBar() {
                         <li class="nav-item"><button id="productsBtn" class="nav-link">Products</button></li>
                         <li class="nav-item"><button id="accountBtn" class="nav-link">My Account</button></li>
                         ${user?.role === 'ROLE_ADMIN' ? `
-                            <li class="nav-item"><button id="userMgmtBtn" class="nav-link">User Mgmt.</button></li>
+                            <li class="nav-item"><button id="adminBtn" class="nav-link">Admin</button></li>
                         ` : ''}
                         ${user ? `
                             <li class="nav-item"><button id="logoutBtn" class="nav-link">Logout</button></li>
@@ -79,9 +79,9 @@ function setupNavigation() {
         renderSidebar();
     });
 
-    document.getElementById("userMgmtBtn")?.addEventListener("click", () => {
+    document.getElementById("adminBtn")?.addEventListener("click", () => {
         renderUserManagementPage();
-        renderSidebar();
+        renderAdminSidebar();
     });
 
 
