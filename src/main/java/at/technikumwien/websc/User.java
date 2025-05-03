@@ -33,24 +33,41 @@ public class User {
     @Column(nullable = false)
     private String password;  // Hashed password storage
 
+
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private Role role;
 
+    @Column(length = 255)
+    private String address;
+
+    @Column
+    private java.sql.Date birthdate;
+
+
+
     public User(String firstName, String lastName, String email, String username, String passwordHash, Role role) {
-        this(null, firstName, lastName, email, username, passwordHash, role);
+        this(null, firstName, lastName, email, username, passwordHash, role, null, null);
     }
 
     public User(String firstName, String lastName, String email, String username, String passwordHash) {
-        this(null, firstName, lastName, email, username, passwordHash, Role.ROLE_CUSTOMER);
+        this(null, firstName, lastName, email, username, passwordHash, Role.ROLE_CUSTOMER, null, null);
     }
+
+
 
     public Object getPassword() {
         return password;
     }
 
+
+
     public enum Role {
         ROLE_CUSTOMER,
         ROLE_ADMIN
     }
+
+
+
 }
