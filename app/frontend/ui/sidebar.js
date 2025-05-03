@@ -4,6 +4,7 @@ import {renderProfilePage} from "../pages/user/profile.js";
 import {fetchProductsByCategory} from "../pages/products.js";
 import {renderOrdersPage} from "../pages/user/orders.js";
 import {renderUserManagementPage} from "../pages/admin/users.js";
+import {renderOrderManagementPage} from "../pages/admin/orders.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -121,8 +122,7 @@ export function renderAdminSidebar() {
 
     document.getElementById("orderManagementSidebarLink").addEventListener("click", (e) => {
         e.preventDefault();
-        alert("This page is not yet implemented.");
-        //renderChangePasswordPage();
+        renderOrderManagementPage();
     });
 
     document.getElementById("productManagementSidebarLink").addEventListener("click", (e) => {

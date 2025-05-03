@@ -43,4 +43,16 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllOrders(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getRole() != User.Role.ROLE_ADMIN) {
+            return ResponseEntity.status(403).body("Access denied");
+        }
+
+        List<OrderDTO> allOrders = orderService.getAllOrders();
+        return ResponseEntity.ok(allOrders);
+    }
+
+
 }
