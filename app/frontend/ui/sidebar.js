@@ -2,6 +2,8 @@ import {BACKEND_BASE_URL} from "../util/rest.js";
 import {renderChangePasswordPage} from "../pages/user/password.js";
 import {renderProfilePage} from "../pages/user/profile.js";
 import {fetchProductsByCategory} from "../pages/products.js";
+import {renderOrdersPage} from "../pages/user/orders.js";
+import {renderUserManagementPage} from "../pages/admin/users.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -76,7 +78,7 @@ export function renderUserSidebar() {
     document.getElementById("profileSidebarLink").addEventListener("click", (e) => {
         e.preventDefault();
 
-        renderProfilePage(); // Diese Funktion musst du implementieren
+        renderProfilePage();
     });
 
     document.getElementById("changePasswordSidebarLink").addEventListener("click", (e) => {
@@ -86,9 +88,53 @@ export function renderUserSidebar() {
 
     document.getElementById("ordersSidebarLink").addEventListener("click", (e) => {
         e.preventDefault();
-        alert("Order page is not yet implemented."); // placeholder
-        // renderOrdersPage();
+        //alert("This page is not yet implemented."); // placeholder
+        renderOrdersPage();
     });
 }
 
+
+//export function renderUserSidebar() {
+export function renderAdminSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.innerHTML = `
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a href="#" id="userManagementSidebarLink">Manage Users</a>
+            </li>
+            <li class="list-group-item">
+                <a href="#" id="orderManagementSidebarLink">Manage Orders</a>
+            </li>
+            <li class="list-group-item">
+                <a href="#" id="productManagementSidebarLink">Manage Products</a>
+            </li>
+            <li class="list-group-item">
+                <a href="#" id="categoryManagementSidebarLink">Manage Categories</a>
+            </li>
+        </ul>
+    `;
+
+    document.getElementById("userManagementSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        renderUserManagementPage();
+    });
+
+    document.getElementById("orderManagementSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        alert("This page is not yet implemented.");
+        //renderChangePasswordPage();
+    });
+
+    document.getElementById("productManagementSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        alert("This page is not yet implemented.");
+        //renderOrdersPage();
+    });
+
+    document.getElementById("categoryManagementSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        alert("This page is not yet implemented.");
+        //renderOrdersPage();
+    });
+}
 
