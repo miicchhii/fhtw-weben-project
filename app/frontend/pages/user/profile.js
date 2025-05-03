@@ -106,7 +106,7 @@ export async function renderProfilePage() {
         }
 
         try {
-            const res = await fetch(`${BACKEND_BASE_URL}/api/user/update`, {
+            const res = await fetch(`${BACKEND_BASE_URL}/api/users/me`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
