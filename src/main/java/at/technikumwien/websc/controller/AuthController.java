@@ -98,43 +98,6 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Registration successful"));
     }
 
-    @PutMapping("/me")
-    public ResponseEntity<?> updateCurrentUser(@RequestBody Map<String, String> updates, HttpSession session) {
-        User sessionUser = (User) session.getAttribute("user");
-
-        if (sessionUser == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Not logged in"));
-        }
-
-        Optional<User> userOpt = userRepository.findById(sessionUser.getId());
-        if (userOpt.isEmpty()) {
-            return ResponseEntity.status(404).body(Map.of("error", "User not found"));
-        }
-
-        User user = userOpt.get();
-
-        // Felder aktualisieren
-        if (updates.containsKey("firstName")) user.setFirstName(updates.get("firstName"));
-        if (updates.containsKey("lastName")) user.setLastName(updates.get("lastName"));
-        if (updates.containsKey("email")) user.setEmail(updates.get("email"));
-        if (updates.containsKey("username")) user.setUsername(updates.get("username"));
-        if (updates.containsKey("address")) user.setAddress(updates.get("address"));
-        if (updates.containsKey("birthdate")) {
-            try {
-                user.setBirthdate(java.sql.Date.valueOf(updates.get("birthdate")));
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid birthdate format (expected: YYYY-MM-DD)"));
-            }
-        }
-
-        userRepository.save(user);
-        session.setAttribute("user", user); // aktualisiere Session
-
-        return ResponseEntity.ok(Map.of("message", "Profile updated successfully"));
-    }
-
-
-
     //PASSWORD
 
     @PutMapping("/change-password")
