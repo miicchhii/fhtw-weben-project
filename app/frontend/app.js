@@ -27,17 +27,19 @@ async function init() {
     // Attach cart sidebar overlay button
     document.getElementById("cartOverlay").addEventListener("click", toggleCartSidebar);
 
+    console.log("Log 1");
     // Attach emptyCart to window so onclick in HTML works
     window.emptyCart = emptyCart;
     window.toggleCartSidebar = toggleCartSidebar;
-
+    console.log("Log 2");
     // Render sections
     await renderNavBar();
     renderSidebar();
-
+    console.log("Log 3");
     // Default page
     renderHomePage();
-
+    console.log("Log 4");
     // Load cart on startup
     await loadCartSidebar();
+    console.log("Log 5");
 }

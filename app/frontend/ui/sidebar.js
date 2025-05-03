@@ -1,5 +1,7 @@
-import { fetchProductsByCategory } from "../pages/products.js";
 import {BACKEND_BASE_URL} from "../util/rest.js";
+import {renderChangePasswordPage} from "../pages/user/password.js";
+import {renderProfilePage} from "../pages/user/profile.js";
+import {fetchProductsByCategory} from "../pages/products.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -12,7 +14,7 @@ export function renderSidebar() {
 }
 
 export function renderProductsSidebar() {
-    fetch( BACKEND_BASE_URL+'/api/categories')
+    fetch(BACKEND_BASE_URL + '/api/categories')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -42,7 +44,7 @@ export function renderProductsSidebar() {
             `;
         });
 
-    document.getElementById("sidebar").addEventListener("click", function(event) {
+    document.getElementById("sidebar").addEventListener("click", function (event) {
         if (event.target && event.target.matches(".category-link")) {
             event.preventDefault();
             const categoryId = event.target.getAttribute("data-category-id");
@@ -52,6 +54,41 @@ export function renderProductsSidebar() {
     });
 
 
+}
+
+//export function renderUserSidebar() {
+export function renderUserSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.innerHTML = `
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a href="#" id="profileSidebarLink">Profile Settings</a>
+            </li>
+            <li class="list-group-item">
+                <a href="#" id="changePasswordSidebarLink">Change Password</a>
+            </li>
+            <li class="list-group-item">
+                <a href="#" id="ordersSidebarLink">My Orders</a>
+            </li>
+        </ul>
+    `;
+
+    document.getElementById("profileSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+
+        renderProfilePage(); // Diese Funktion musst du implementieren
+    });
+
+    document.getElementById("changePasswordSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        renderChangePasswordPage();
+    });
+
+    document.getElementById("ordersSidebarLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        alert("Order page is not yet implemented."); // placeholder
+        // renderOrdersPage();
+    });
 }
 
 

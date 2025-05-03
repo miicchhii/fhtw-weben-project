@@ -1,7 +1,7 @@
-import {renderNavBar} from "../ui/navbar.js";
-import {renderRegisterPage} from "../pages/register.js";
-import {BACKEND_BASE_URL} from "../util/rest.js";
-import {loadCartSidebar} from "../ui/cartSidebar.js";
+import {renderNavBar} from "../../ui/navbar.js";
+import {renderRegisterPage} from "./register.js";
+import {BACKEND_BASE_URL} from "../../util/rest.js";
+import {loadCartSidebar} from "../../ui/cartSidebar.js";
 
 
 export function renderLoginPage() {
@@ -38,7 +38,7 @@ export function renderLoginPage() {
         const passwordHash = document.getElementById("password").value; // hash if needed
 
         try {
-            const loginResponse = await fetch(BACKEND_BASE_URL+"/api/auth/login", {
+            const loginResponse = await fetch(BACKEND_BASE_URL + "/api/auth/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 credentials: "include",
@@ -56,7 +56,7 @@ export function renderLoginPage() {
 
             for (const item of guestCart) {
                 try {
-                    const res = await fetch(BACKEND_BASE_URL+"/api/cart/items", {
+                    const res = await fetch(BACKEND_BASE_URL + "/api/cart/items", {
                         method: "POST",
                         credentials: "include",
                         headers: {
@@ -82,7 +82,7 @@ export function renderLoginPage() {
             //refresh sidebar after syncing
             await loadCartSidebar();
 
-            const userRes = await fetch(BACKEND_BASE_URL+"/api/auth/me", {
+            const userRes = await fetch(BACKEND_BASE_URL + "/api/auth/me", {
                 method: "GET",
                 credentials: "include",
             });
