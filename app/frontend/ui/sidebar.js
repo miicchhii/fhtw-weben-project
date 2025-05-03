@@ -1,8 +1,7 @@
-
 import {BACKEND_BASE_URL} from "../util/rest.js";
 import {renderChangePasswordPage} from "../pages/user/password.js";
-import {renderAccountPage} from "../pages/account.js";
 import {renderProfilePage} from "../pages/user/profile.js";
+import {fetchProductsByCategory} from "../pages/products.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -15,7 +14,7 @@ export function renderSidebar() {
 }
 
 export function renderProductsSidebar() {
-    fetch( BACKEND_BASE_URL+'/api/categories')
+    fetch(BACKEND_BASE_URL + '/api/categories')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -45,7 +44,7 @@ export function renderProductsSidebar() {
             `;
         });
 
-    document.getElementById("sidebar").addEventListener("click", function(event) {
+    document.getElementById("sidebar").addEventListener("click", function (event) {
         if (event.target && event.target.matches(".category-link")) {
             event.preventDefault();
             const categoryId = event.target.getAttribute("data-category-id");
@@ -76,8 +75,8 @@ export function renderUserSidebar() {
 
     document.getElementById("profileSidebarLink").addEventListener("click", (e) => {
         e.preventDefault();
-        
-       renderProfilePage(); // Diese Funktion musst du implementieren
+
+        renderProfilePage(); // Diese Funktion musst du implementieren
     });
 
     document.getElementById("changePasswordSidebarLink").addEventListener("click", (e) => {
