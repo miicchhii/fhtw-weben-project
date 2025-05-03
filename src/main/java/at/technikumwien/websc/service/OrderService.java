@@ -1,6 +1,8 @@
 package at.technikumwien.websc.service;
 
 import at.technikumwien.websc.*;
+import at.technikumwien.websc.dto.OrderDTO;
+import at.technikumwien.websc.dto.OrderItemDTO;
 import at.technikumwien.websc.repository.CartRepository;
 import at.technikumwien.websc.repository.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -50,4 +52,22 @@ public class OrderService {
 
         return order;
     }
+
+    public List<OrderDTO> getOrders(User user) {
+        List<Order> orders = orderRepository.findByUser(user);
+
+        return orders.stream().map(order -> {
+            List<OrderItemDTO> itemDTOs = order.getItems().stream()
+                    .map(item -> new OrderItemDTO(
+                            item.getProduct().getName(),
+                            item.getQuantity(),
+                            item.getPriceAtPurchase(),
+                            item.getProduct().getId()
+                    ))
+                    .toList();
+
+            return new OrderDTO(order.getId(), order.getCreatedAt(), itemDTOs);
+        }).toList();
+    }
+
 }
