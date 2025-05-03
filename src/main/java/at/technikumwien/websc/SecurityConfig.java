@@ -22,8 +22,16 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/**").permitAll() // ❗️ let anyone in
-                        .anyRequest().permitAll()
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/register",
+                                "/api/auth/logout"
+                        ).permitAll()
+
+                        .requestMatchers("/api/auth/me").authenticated()
+
+                        .requestMatchers("/api/users/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable()) // ⛔ disable default HTML login page
                 .logout(logout -> logout.logoutUrl("/api/auth/logout"))
