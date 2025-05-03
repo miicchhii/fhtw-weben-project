@@ -1,5 +1,6 @@
 import {renderProductsPage} from "./products.js";
 import {BACKEND_BASE_URL} from "../util/rest.js";
+import {addToCart} from "../ui/cartSidebar.js";
 
 export function renderProductDetailPage(productId) {
     // Fetch product details by ID
@@ -23,6 +24,8 @@ export function renderProductDetailPage(productId) {
                         </div>
                     </div>
                     <button id="backToProductsBtn" class="btn btn-secondary mt-3">Back to Products</button>
+                    <button id="addToCartBtn" class="btn btn-primary mt-3">Add to Cart</button>
+                    
                 </div>
             `;
 
@@ -33,6 +36,14 @@ export function renderProductDetailPage(productId) {
             document.getElementById("backToProductsBtn").addEventListener("click", function () {
                 renderProductsPage();
             });
+
+            // Add event listener for the "Add to Cart" button
+            document.getElementById("addToCartBtn").addEventListener("click", function () {
+                addToCart(product.id); // 👈 Make sure addToCart is in scope
+            });
+
+
+
         })
         .catch(error => {
             console.error('Error fetching product details:', error);
