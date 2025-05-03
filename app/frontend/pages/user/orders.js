@@ -27,7 +27,8 @@ export async function renderOrdersPage() {
             throw new Error("Failed to fetch orders");
         }
 
-        orders = await res.json();
+        orders = (await res.json()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
     } catch (err) {
         console.error("Error loading orders:", err);
         document.getElementById("content").innerHTML = `
@@ -51,7 +52,7 @@ export async function renderOrdersPage() {
         <div class="container mt-4">
             <h2>Your Orders</h2>
     `;
-
+    let total = 0;
     for (const order of orders) {
         orderHtml += `
             <div class="card mb-4">
@@ -61,11 +62,16 @@ export async function renderOrdersPage() {
                 </div>
                 <div class="card-body">
                     <table class="table table-sm">
+                        <colgroup>
+                            <col style="width: 60%;">
+                            <col style="width: 20%;">
+                            <col style="width: 20%;">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>Product</th>
                                 <th>Quantity</th>
-                                <th>Price at Purchase</th>
+                                <th>Price</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,9 +85,15 @@ export async function renderOrdersPage() {
                     <td>${formatPrice(item.priceAtPurchase)}</td>
                 </tr>
             `;
+            total += item.priceAtPurchase * item.quantity;
         }
 
         orderHtml += `
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td></td>
+                                <td><strong>${formatPrice(total)}</strong></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
