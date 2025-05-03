@@ -2,6 +2,7 @@ import {BACKEND_BASE_URL} from "../util/rest.js";
 import {renderChangePasswordPage} from "../pages/user/password.js";
 import {renderProfilePage} from "../pages/user/profile.js";
 import {fetchProductsByCategory} from "../pages/products.js";
+import {renderOrdersPage} from "../pages/user/orders.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -86,8 +87,8 @@ export function renderUserSidebar() {
 
     document.getElementById("ordersSidebarLink").addEventListener("click", (e) => {
         e.preventDefault();
-        alert("Order page is not yet implemented."); // placeholder
-        // renderOrdersPage();
+        //alert("Order page is not yet implemented."); // placeholder
+        renderOrdersPage();
     });
 }
 
