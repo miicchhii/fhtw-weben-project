@@ -1,7 +1,7 @@
-import {renderNavBar} from "../ui/navbar.js";
-import {renderRegisterPage} from "../pages/register.js";
-import {BACKEND_BASE_URL} from "../util/rest.js";
-import {loadCartSidebar} from "../ui/cartSidebar.js";
+import {renderNavBar} from "../../ui/navbar.js";
+import {renderRegisterPage} from "register.js";
+import {BACKEND_BASE_URL} from "../../util/rest.js";
+import {loadCartSidebar} from "../../ui/cartSidebar.js";
 
 
 export function renderLoginPage() {

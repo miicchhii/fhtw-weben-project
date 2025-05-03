@@ -1,5 +1,5 @@
 import {renderNavBar} from './ui/navbar.js';
-import {renderProductsSidebar, renderSidebar, renderUserSidebar} from './ui/sidebar.js';
+import {renderSidebar} from './ui/sidebar.js';
 import {renderHomePage} from './pages/home.js';
 import {emptyCart, loadCartSidebar, toggleCartSidebar} from "./ui/cartSidebar.js";
 
@@ -26,6 +26,7 @@ async function init() {
 
     // Attach cart sidebar overlay button
     document.getElementById("cartOverlay").addEventListener("click", toggleCartSidebar);
+
 
     // Attach emptyCart to window so onclick in HTML works
     window.emptyCart = emptyCart;
