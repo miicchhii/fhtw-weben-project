@@ -85,7 +85,7 @@ function displayProducts(products) {
       <td><img src="${product.imageUrl || '../static/img/default-image.jpg'}" width="50" /></td>
       <td>${product.name}</td>
       <td>${product.price} €</td>
-      <td>${product.category}</td>
+       <td>${product.category?.name || "-"}</td>
       <td>
         <button class="btn btn-sm btn-primary edit-product" data-product-id="${product.id}">edit</button>
         <button class="btn btn-sm btn-danger delete-product" data-product-id="${product.id}">delete</button>
