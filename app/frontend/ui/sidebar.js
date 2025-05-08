@@ -5,6 +5,7 @@ import {fetchProductsByCategory} from "../pages/products.js";
 import {renderOrdersPage} from "../pages/user/orders.js";
 import {renderUserManagementPage} from "../pages/admin/users.js";
 import {renderOrderManagementPage} from "../pages/admin/orders.js";
+import {renderProductManagementPage} from "../pages/admin/productManagement.js";
 
 export function renderSidebar() {
     document.getElementById("sidebar").innerHTML = `
@@ -127,8 +128,8 @@ export function renderAdminSidebar() {
 
     document.getElementById("productManagementSidebarLink").addEventListener("click", (e) => {
         e.preventDefault();
-        alert("This page is not yet implemented.");
-        //renderOrdersPage();
+        //alert("This page is not yet implemented.");
+        renderProductManagementPage();
     });
 
     document.getElementById("categoryManagementSidebarLink").addEventListener("click", (e) => {
