@@ -1,9 +1,22 @@
-import { BACKEND_BASE_URL } from "../../util/rest.js";
-import { renderProductEditPage } from "./productEdit.js";
-import { renderProductAddPage } from "./productAdd.js";
+import {BACKEND_BASE_URL} from "../../util/rest.js";
+import {renderProductEditPage} from "./productEdit.js";
+import {renderProductAddPage} from "./productAdd.js";
+import {checkLoginStatus, formatPrice} from "../../util/helper.js";
 
-// Hauptfunktion zum Anzeigen der Seite
-export function renderProductManagementPage() {
+
+export async function renderProductManagementPage() {
+
+    const user = await checkLoginStatus();
+
+    if (!user || user.role !== "ROLE_ADMIN") {
+        document.getElementById("content").innerHTML = `
+      <div class="alert alert-danger text-center m-5">
+        Access denied: Admins only.
+      </div>
+    `;
+        return;
+    }
+
     document.getElementById("content").innerHTML = `
     <div class="container mt-4">
       <h1>Product Management</h1>
@@ -37,7 +50,7 @@ export function renderProductManagementPage() {
             renderProductEditPage(productId);
         } else if (event.target.classList.contains("delete-product")) {
             const productId = event.target.getAttribute("data-product-id");
-            if (confirm("Produkt wirklich löschen?")) {
+            if (confirm("Are you sure?")) {
                 deleteProduct(productId);
             }
         }
@@ -102,10 +115,20 @@ function displayProducts(products) {
 function deleteProduct(productId) {
     fetch(`${BACKEND_BASE_URL}/api/products/${productId}`, {
         method: "DELETE",
+        credentials: "include"
+
+
     })
         .then((res) => {
-            if (!res.ok) throw new Error("failed to delete Product");
-            fetchProducts(); // Neu laden
+            if (!res.ok) {
+                return res.text().then(text => {
+                    throw new Error(`Server error ${res.status}: ${text}`);
+                });
+            } else {
+
+                fetchProducts();
+            }
+
         })
         .catch((err) => {
             console.error("Error deleting Product:", err);

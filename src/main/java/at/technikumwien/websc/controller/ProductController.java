@@ -1,10 +1,16 @@
 package at.technikumwien.websc.controller;
 
 import at.technikumwien.websc.Product;
+import at.technikumwien.websc.User;
 import at.technikumwien.websc.repository.ProductRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import at.technikumwien.websc.dto.ProductDTO;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -44,6 +50,25 @@ public class ProductController {
             return productRepository.findAll();
         }
     }
+
+    // Delete a product by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getRole() != User.Role.ROLE_ADMIN) {
+            return ResponseEntity.status(403).body("Access denied");
+        }
+
+        if (!productRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        productRepository.deleteById(id);
+        return ResponseEntity.noContent().build(); // 204 No Content
+    }
+
+
+
 }
 
 
