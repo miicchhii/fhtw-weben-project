@@ -25,12 +25,12 @@ export function renderProductAddPage() {
                         <option value="">Loading categories...</option>
                     </select>
                 </div>
-                <!--
+                <!-- file upload -->
                 <div class="mb-3">
                     <label for="imageFile" class="form-label">Product Image</label>
                     <input type="file" class="form-control" id="imageFile" accept="image/*">
                 </div>
-                -->
+                
                 <button type="submit" class="btn btn-primary">Create Product</button>
             </form>
         </div>
@@ -93,6 +93,28 @@ export function renderProductAddPage() {
                 throw new Error(`Server error ${res.status}: ${errorText}`);
             }
 
+            // Produkt erfolgreich erstellt → ID extrahieren
+            const createdProduct = await res.json();
+            const productId = createdProduct.id;
+
+            // Prüfen, ob ein Bild ausgewählt wurde
+            const imageFile = form.imageFile.files[0];
+            if (imageFile) {
+                const imageFormData = new FormData();
+                imageFormData.append("image", imageFile);
+
+                const imageRes = await fetch(`${BACKEND_BASE_URL}/api/products/${productId}/image`, {
+                    method: "POST",
+                    credentials: "include",
+                    body: imageFormData
+                });
+
+                if (!imageRes.ok) {
+                    const imageErrorText = await imageRes.text();
+                    throw new Error(`Image upload failed: ${imageErrorText}`);
+                }
+            }
+
             alert("Product created successfully.");
             import("./productManagement.js").then(module => module.renderProductManagementPage());
 
@@ -100,6 +122,7 @@ export function renderProductAddPage() {
             console.error("Error creating product:", err);
             alert("Failed to create product.");
         }
+
     });
 
 }
