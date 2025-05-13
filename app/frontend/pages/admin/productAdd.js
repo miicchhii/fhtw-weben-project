@@ -1,6 +1,48 @@
 import {BACKEND_BASE_URL} from "../../util/rest.js";
 import { sanitizeInput } from "../../util/helper.js";
 
+// Hilfsfunktion: Bild auf max. 800x800 px verkleinern und als WebP konvertieren
+async function processImageToWebp(file) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+
+        img.onload = () => {
+            // Berechne neue Dimensionen
+            let { width, height } = img;
+            const maxDim = 800;
+            if (width > maxDim || height > maxDim) {
+                const scale = Math.min(maxDim / width, maxDim / height);
+                width = Math.round(width * scale);
+                height = Math.round(height * scale);
+            }
+
+            // Canvas zum Resizen & Konvertieren
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Als WebP exportieren (Qualität 0.8)
+            canvas.toBlob(blob => {
+                if (blob) {
+                    resolve(blob);
+                } else {
+                    reject(new Error("WebP-Konvertierung fehlgeschlagen"));
+                }
+                URL.revokeObjectURL(url);
+            }, 'image/webp', 0.8);
+        };
+
+        img.onerror = () => {
+            reject(new Error("Bild konnte nicht geladen werden"));
+            URL.revokeObjectURL(url);
+        };
+
+        img.src = url;
+    });
+}
 
 export function renderProductAddPage() {
     document.getElementById("content").innerHTML = `
@@ -75,10 +117,10 @@ export function renderProductAddPage() {
             description: sanitizeInput(form.description.value),
             price: parseFloat(form.price.value),
             categoryId: parseInt(form.category.value)
-            // imageFile ist hier nicht dabei
         };
 
         try {
+            // 1. Produktdaten speichern
             const res = await fetch(`${BACKEND_BASE_URL}/api/products`, {
                 method: "POST",
                 credentials: "include",
@@ -97,11 +139,14 @@ export function renderProductAddPage() {
             const createdProduct = await res.json();
             const productId = createdProduct.id;
 
-            // Prüfen, ob ein Bild ausgewählt wurde
+            // 2. Bild verarbeiten und hochladen (falls vorhanden)
             const imageFile = form.imageFile.files[0];
             if (imageFile) {
+                // Bild resizen & in WebP umwandeln
+                const processedBlob = await processImageToWebp(imageFile);
+
                 const imageFormData = new FormData();
-                imageFormData.append("image", imageFile);
+                imageFormData.append("image", processedBlob, "product.webp");
 
                 const imageRes = await fetch(`${BACKEND_BASE_URL}/api/products/${productId}/image`, {
                     method: "POST",
@@ -122,7 +167,5 @@ export function renderProductAddPage() {
             console.error("Error creating product:", err);
             alert("Failed to create product.");
         }
-
     });
-
 }

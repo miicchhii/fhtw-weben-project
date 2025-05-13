@@ -7,6 +7,7 @@ import at.technikumwien.websc.repository.CategoryRepository;
 import at.technikumwien.websc.repository.ProductRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,11 +32,15 @@ import java.nio.file.Paths;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 
+import javax.imageio.spi.IIORegistry;
+
 import javax.imageio.ImageIO;
+import javax.imageio.spi.IIORegistry;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
+
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -123,75 +128,37 @@ public class ProductController {
 
     @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadProductImage(@PathVariable Long id,
-                                                @RequestParam("image") MultipartFile imageFile,
-                                                HttpSession session) {
-        // Admin-Prüfung
-        User user = (User) session.getAttribute("user");
-        if (user == null || user.getRole() != User.Role.ROLE_ADMIN) {
-            return ResponseEntity.status(403).body("Access denied");
+                                                @RequestParam("image") MultipartFile imageFile) {
+        // Produkt holen
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
         }
+        Product product = optionalProduct.get();
 
-        // Produkt prüfen
-        Optional<Product> productOpt = productRepository.findById(id);
-        if (productOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Product product = productOpt.get();
-
-        if (imageFile.isEmpty()) {
-            return ResponseEntity.badRequest().body("No file uploaded");
-        }
-
+        // Bild speichern
         try {
-            // Dateiname: produktname_timestamp.webp
-            String baseName = product.getName()
-                    .toLowerCase()
-                    .replaceAll("[^a-z0-9]", "-")
-                    + "_" + System.currentTimeMillis();
+            // Zielverzeichnis, z.B. unter /uploads/products/
+            String uploadDir = "uploads/products";
+            Files.createDirectories(Paths.get(uploadDir));
+            String filename = "product_" + id + ".webp";
+            Path filePath = Paths.get(uploadDir, filename);
 
-            // Zielpfade
-            Path root = Paths.get("app/frontend/uploads/");
-            Path originals = root.resolve("originals");
-            Path thumbs = root.resolve("thumbnails");
+            // Bild speichern
+            imageFile.transferTo(filePath);
 
-            Files.createDirectories(originals);
-            Files.createDirectories(thumbs);
-
-            // Bild laden
-            BufferedImage inputImage = ImageIO.read(imageFile.getInputStream());
-
-            // Original: max 800x800
-            BufferedImage resized = Thumbnails.of(inputImage)
-                    .size(800, 800)
-                    .keepAspectRatio(true)
-                    .asBufferedImage();
-
-            // Thumbnail: 200x200, gecroppt
-            BufferedImage thumbnail = Thumbnails.of(inputImage)
-                    .size(200, 200)
-                    .crop(Positions.CENTER)
-                    .asBufferedImage();
-
-            // Speicherdateien
-            File originalFile = originals.resolve(baseName + ".webp").toFile();
-            File thumbFile = thumbs.resolve(baseName + ".webp").toFile();
-
-            // Speichern als WebP
-            ImageIO.write(resized, "webp", originalFile);
-            ImageIO.write(thumbnail, "webp", thumbFile);
-
-            // Produkt aktualisieren
-            product.setImageUrl("/uploads/originals/" + baseName + ".webp");
+            // URL zum Bild generieren (je nach Setup evtl. anders)
+            String imageUrl = "/uploads/" + filename;
+            product.setImageUrl(imageUrl);
             productRepository.save(product);
 
             return ResponseEntity.ok("Image uploaded successfully");
-
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Image processing failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Image upload failed: " + e.getMessage());
         }
     }
+
 
 
 

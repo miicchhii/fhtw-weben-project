@@ -20,3 +20,5 @@ spring:
     livereload:
       enabled: true  # Enables livereload for live reloads
 
+  file:
+    upload-dir: uploads/products
