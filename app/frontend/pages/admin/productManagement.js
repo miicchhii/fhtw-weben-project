@@ -80,9 +80,17 @@ function displayProducts(products) {
         return;
     }
 
-    const rows = products.map((product) => `
+
+
+    const rows = products.map((product) => {
+        // Fallback-Bild, falls kein Bild vorhanden
+
+        const imageSrc = product.imageUrl
+            ? `${BACKEND_BASE_URL.replace('/api', '')}${product.imageUrl}`
+            : '../static/img/default-image.jpg';
+        return `
     <tr>
-      <td><img src="${product.imageUrl || '../static/img/default-image.jpg'}" width="50" /></td>
+      <td><img src="${imageSrc || '../static/img/default-image.jpg'}" width="50" /></td>
       <td>${product.name}</td>
       <td>${product.price} €</td>
        <td>${product.category?.name || "-"}</td>
@@ -91,7 +99,8 @@ function displayProducts(products) {
         <button class="btn btn-sm btn-danger delete-product" data-product-id="${product.id}">delete</button>
       </td>
     </tr>
-  `).join("");
+   `;
+    }).join("");
 
     document.getElementById("product-list").innerHTML = `
     <table class="table table-striped">

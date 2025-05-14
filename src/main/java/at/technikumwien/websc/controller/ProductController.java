@@ -119,7 +119,7 @@ public class ProductController {
         product.setPrice(BigDecimal.valueOf(dto.getPrice())); // DTO liefert Double, Entity erwartet BigDecimal
         product.setCreationDate(LocalDate.now());
         product.setCategory(optionalCategory.get());
-        //product.setImageUrl(dto.getImageUrl()); // falls dein Model das Feld hat
+        
 
         productRepository.save(product);
 
@@ -148,7 +148,7 @@ public class ProductController {
             imageFile.transferTo(filePath);
 
             // URL zum Bild generieren (je nach Setup evtl. anders)
-            String imageUrl = "/uploads/" + filename;
+            String imageUrl = "/uploads/products/" + filename;
             product.setImageUrl(imageUrl);
             productRepository.save(product);
 
