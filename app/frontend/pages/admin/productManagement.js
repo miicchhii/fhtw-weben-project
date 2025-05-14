@@ -44,10 +44,11 @@ export async function renderProductManagementPage() {
         renderProductAddPage();
     });
 
-    document.getElementById("content").addEventListener("click", (event) => {
+    document.getElementById("content").addEventListener("click", async (event) => {
         if (event.target.classList.contains("edit-product")) {
-            const productId = event.target.getAttribute("data-product-id");
-            renderProductEditPage(productId);
+            const productId = event.target.dataset.productId;
+            await renderProductEditPage(productId); // Direkter Aufruf ohne 'new'
+
         } else if (event.target.classList.contains("delete-product")) {
             const productId = event.target.getAttribute("data-product-id");
             if (confirm("Are you sure?")) {
@@ -90,7 +91,7 @@ function displayProducts(products) {
             : '../static/img/default-image.jpg';
         return `
     <tr>
-      <td><img src="${imageSrc || '../static/img/default-image.jpg'}" width="50" /></td>
+      <td><img src="${imageSrc || '../static/img/default-image.jpg'}" alt="product picture" width="50" /></td>
       <td>${product.name}</td>
       <td>${product.price} €</td>
        <td>${product.category?.name || "-"}</td>

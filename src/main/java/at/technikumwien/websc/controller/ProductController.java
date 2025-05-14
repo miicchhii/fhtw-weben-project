@@ -126,6 +126,49 @@ public class ProductController {
         return ResponseEntity.status(201).body(product);
     }
 
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id,
+                                           @Valid @RequestBody ProductDTO dto,
+                                           BindingResult bindingResult,
+                                           HttpSession session) {
+        // Zugriffskontrolle
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getRole() != User.Role.ROLE_ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+        }
+
+        // Validierung
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
+        // Produkt aus DB holen
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
+
+        // Kategorie prüfen
+        Optional<Category> optionalCategory = categoryRepository.findById(dto.getCategoryId());
+        if (optionalCategory.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid category ID");
+        }
+
+        // Produkt aktualisieren
+        Product product = optionalProduct.get();
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(BigDecimal.valueOf(dto.getPrice()));
+        product.setCategory(optionalCategory.get());
+
+        productRepository.save(product);
+
+        return ResponseEntity.ok(product);
+    }
+
+    //FILE UPLOAD
+
     @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadProductImage(@PathVariable Long id,
                                                 @RequestParam("image") MultipartFile imageFile) {
@@ -138,16 +181,16 @@ public class ProductController {
 
         // Bild speichern
         try {
-            // Zielverzeichnis, z.B. unter /uploads/products/
+            // Zielverzeichnis
             String uploadDir = "uploads/products";
-            Files.createDirectories(Paths.get(uploadDir));
+            Files.createDirectories(Paths.get(uploadDir)); //erstellt Verzeichnis, falls nicht vorhanden
             String filename = "product_" + id + ".webp";
             Path filePath = Paths.get(uploadDir, filename);
 
             // Bild speichern
             imageFile.transferTo(filePath);
 
-            // URL zum Bild generieren (je nach Setup evtl. anders)
+            // URL zum Bild generieren
             String imageUrl = "/uploads/products/" + filename;
             product.setImageUrl(imageUrl);
             productRepository.save(product);
@@ -156,6 +199,46 @@ public class ProductController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Image upload failed: " + e.getMessage());
+        }
+    }
+
+    @PutMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateProductImage(@PathVariable Long id,
+                                                @RequestParam("image") MultipartFile imageFile,
+                                                HttpSession session) {
+        // Zugriffskontrolle
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getRole() != User.Role.ROLE_ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+        }
+
+        // Produkt holen
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
+        Product product = optionalProduct.get();
+
+        try {
+            // Zielverzeichnis erstellen, falls es noch nicht existiert
+            String uploadDir = "uploads/products";
+            Files.createDirectories(Paths.get(uploadDir));
+
+            String filename = "product_" + id + ".webp";
+            Path filePath = Paths.get(uploadDir, filename);
+
+            // Bild speichern (überschreibt ggf. bestehendes)
+            imageFile.transferTo(filePath);
+
+            // URL aktualisieren
+            String imageUrl = "/uploads/products/" + filename;
+            product.setImageUrl(imageUrl);
+            productRepository.save(product);
+
+            return ResponseEntity.ok("Product image updated successfully");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Image update failed: " + e.getMessage());
         }
     }
 
