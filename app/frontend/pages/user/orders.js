@@ -148,7 +148,7 @@ function generateInvoicePDF(order) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Absenderadresse (BytePort)
+    // === Firmendaten (Absender) ===
     const sender = {
         company: "BytePort",
         street: "Innovation Avenue 123",
@@ -156,50 +156,51 @@ function generateInvoicePDF(order) {
         postal: "1010",
         country: "Austria",
         email: "info@byteport.com",
-        phone: "+43 123 4567890"
+        phone: "+43 123 4567890",
+        website: "www.byteport.com"
     };
 
-    // Empfängeradresse (anpassen, falls weitere Felder vorhanden)
-    const address = {
-        name: `${order.userFirstName} ${order.userLastName}`,
-        street: order.userAddress || "–",
-        city: "–",
-        postal: "–",
-        country: "–"
-    };
+    // === Kundendaten (Empfänger) ===
+    const recipient = [
+        `${order.userFirstName} ${order.userLastName}`,
+        order.userAddress || "–"
+    ];
 
-    // Kopfbereich
-    doc.setFontSize(18);
-    doc.text("Invoice", 14, 20);
+    // === Rechnungsinformationen ===
+    const invoiceNumber = `INV-${order.id}`;
+    const invoiceDate = new Date().toLocaleDateString('en-GB');
+    const dueDate = (() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 14);
+        return d.toLocaleDateString('en-GB');
+    })();
 
-    // Absenderadresse
+    // === Absenderadresse (linke obere Ecke) ===
     doc.setFontSize(10);
-    doc.text("From:", 14, 28);
     doc.text([
         sender.company,
         sender.street,
         `${sender.postal} ${sender.city}`,
         sender.country,
         `Email: ${sender.email}`,
-        `Phone: ${sender.phone}`
-    ], 14, 33);
+        `Phone: ${sender.phone}`,
+        `Website: ${sender.website}`
+    ], 14, 20);
 
-    // Rechnungsdetails
+    // === Rechnungsdetails (rechte obere Ecke) ===
     doc.setFontSize(12);
-    doc.text(`Order ID: ${order.id}`, 120, 30);
-    doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString('en-GB')}`, 120, 36);
-
-    // Empfängeradresse
+    doc.text("INVOICE", 200, 20, { align: "right" });
     doc.setFontSize(10);
-    doc.text("Bill To:", 120, 46);
-    doc.text([
-        address.name,
-        address.street,
-        `${address.postal} ${address.city}`,
-        address.country
-    ], 120, 51);
+    doc.text(`Invoice Number: ${invoiceNumber}`, 200, 28, { align: "right" });
+    doc.text(`Invoice Date: ${invoiceDate}`, 200, 34, { align: "right" });
+    doc.text(`Due Date: ${dueDate}`, 200, 40, { align: "right" });
 
-    // Tabellendaten vorbereiten
+    // === Empfängeradresse ===
+    doc.setFontSize(10);
+    doc.text("Bill To:", 14, 52);
+    doc.text(recipient, 14, 57);
+
+    // === Tabelle mit Produkten ===
     const tableBody = order.items.map(item => [
         item.productName,
         item.quantity,
@@ -207,27 +208,53 @@ function generateInvoicePDF(order) {
         formatPrice(item.priceAtPurchase * item.quantity)
     ]);
 
-    // Tabelle erstellen
     doc.autoTable({
         head: [["Product", "Quantity", "Unit Price", "Line Total"]],
         body: tableBody,
-        startY: 70,
-        theme: "grid"
+        startY: 75,
+        theme: "grid",
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [22, 160, 133] }
     });
 
-    // Gesamtsumme
-    const total = order.items.reduce((sum, item) =>
-        sum + item.priceAtPurchase * item.quantity, 0);
+    // === Gesamtsumme ===
+    const total = order.items.reduce(
+        (sum, item) => sum + item.priceAtPurchase * item.quantity, 0
+    );
 
     doc.setFontSize(12);
     doc.text(
         `Total: ${formatPrice(total)}`,
-        150,
-        doc.lastAutoTable.finalY + 10
+        200,
+        doc.lastAutoTable.finalY + 10,
+        { align: "right" }
     );
 
+    // === Zahlungsinformation ===
+    doc.setFontSize(10);
+    doc.text("Payment Information:", 14, doc.lastAutoTable.finalY + 20);
+    doc.text([
+        "Bank: Example Bank",
+        "IBAN: AT12 3456 7890 1234 5678",
+        "BIC: EXAMPLEDW",
+        "Please pay within 14 days to the account above."
+    ], 14, doc.lastAutoTable.finalY + 25);
+
+    // === Dankeszeile ===
+    doc.setFontSize(9);
+    doc.text(
+        "Thank you for your business! If you have any questions about this invoice, please contact us.",
+        14,
+        doc.lastAutoTable.finalY + 45
+    );
+
+    // === Speichern ===
     doc.save(`Invoice_${order.id}.pdf`);
 }
+
+
+
+
 
 
 
