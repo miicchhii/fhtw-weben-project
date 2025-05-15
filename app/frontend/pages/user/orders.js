@@ -2,6 +2,7 @@ import {checkLoginStatus, formatPrice} from "../../util/helper.js";
 import {BACKEND_BASE_URL} from "../../util/rest.js";
 import {renderUserSidebar} from "../../ui/sidebar.js";
 
+
 export async function renderOrdersPage() {
     renderUserSidebar();
 
@@ -60,7 +61,11 @@ export async function renderOrdersPage() {
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between">
                     <div><strong>Order #${order.id}</strong></div>
+                    
                     <div>${new Date(order.createdAt).toLocaleString()}</div>
+                    <div >
+                    <button class="btn btn-primary mb-2" onclick="window.printInvoice(${order.id})">Print Invoice</button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-sm">
@@ -105,7 +110,9 @@ export async function renderOrdersPage() {
                             </tr>
                         </tbody>
                     </table>
+                    
                 </div>
+                
             </div>
         `;
     }
@@ -114,3 +121,116 @@ export async function renderOrdersPage() {
 
     document.getElementById("content").innerHTML = orderHtml;
 }
+
+
+//INVOICE
+window.printInvoice = async function(orderId) {
+    try {
+        const res = await fetch(`${BACKEND_BASE_URL}/api/orders/${orderId}`, {
+            credentials: "include"
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch order");
+        }
+
+        const order = await res.json();
+        generateInvoicePDF(order);
+
+    } catch (err) {
+        console.error("Error generating invoice:", err);
+        alert("Failed to generate invoice.");
+    }
+};
+
+
+function generateInvoicePDF(order) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Absenderadresse (BytePort)
+    const sender = {
+        company: "BytePort",
+        street: "Innovation Avenue 123",
+        city: "Vienna",
+        postal: "1010",
+        country: "Austria",
+        email: "info@byteport.com",
+        phone: "+43 123 4567890"
+    };
+
+    // Empfängeradresse (anpassen, falls weitere Felder vorhanden)
+    const address = {
+        name: `${order.userFirstName} ${order.userLastName}`,
+        street: order.userAddress || "–",
+        city: "–",
+        postal: "–",
+        country: "–"
+    };
+
+    // Kopfbereich
+    doc.setFontSize(18);
+    doc.text("Invoice", 14, 20);
+
+    // Absenderadresse
+    doc.setFontSize(10);
+    doc.text("From:", 14, 28);
+    doc.text([
+        sender.company,
+        sender.street,
+        `${sender.postal} ${sender.city}`,
+        sender.country,
+        `Email: ${sender.email}`,
+        `Phone: ${sender.phone}`
+    ], 14, 33);
+
+    // Rechnungsdetails
+    doc.setFontSize(12);
+    doc.text(`Order ID: ${order.id}`, 120, 30);
+    doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString('en-GB')}`, 120, 36);
+
+    // Empfängeradresse
+    doc.setFontSize(10);
+    doc.text("Bill To:", 120, 46);
+    doc.text([
+        address.name,
+        address.street,
+        `${address.postal} ${address.city}`,
+        address.country
+    ], 120, 51);
+
+    // Tabellendaten vorbereiten
+    const tableBody = order.items.map(item => [
+        item.productName,
+        item.quantity,
+        formatPrice(item.priceAtPurchase),
+        formatPrice(item.priceAtPurchase * item.quantity)
+    ]);
+
+    // Tabelle erstellen
+    doc.autoTable({
+        head: [["Product", "Quantity", "Unit Price", "Line Total"]],
+        body: tableBody,
+        startY: 70,
+        theme: "grid"
+    });
+
+    // Gesamtsumme
+    const total = order.items.reduce((sum, item) =>
+        sum + item.priceAtPurchase * item.quantity, 0);
+
+    doc.setFontSize(12);
+    doc.text(
+        `Total: ${formatPrice(total)}`,
+        150,
+        doc.lastAutoTable.finalY + 10
+    );
+
+    doc.save(`Invoice_${order.id}.pdf`);
+}
+
+
+
+
+
+
