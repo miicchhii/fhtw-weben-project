@@ -44,8 +44,9 @@ export async function renderOrderManagementPage() {
                             <colgroup>
                                 <col style="width: 50%;">
                                 <col style="width: 10%;">
+                                <col style="width: 15%;">
                                 <col style="width: 20%;">
-                                <col style="width: 20%;">
+                                <col style="width: 5%;">
                             </colgroup>
                             <thead>
                                 <tr>
@@ -53,6 +54,7 @@ export async function renderOrderManagementPage() {
                                     <th>Quantity</th>
                                     <th style="text-align: right;">Price per Unit</th>
                                     <th style="text-align: right;">Line Total</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,6 +70,7 @@ export async function renderOrderManagementPage() {
                         <td>${item.quantity}</td>
                         <td style="text-align: right;">${formatPrice(item.priceAtPurchase)}</td>
                         <td style="text-align: right;">${formatPrice(line_total)}</td>
+                        <td><button class="btn" data-action="remove" data-product-id="${item.productId}">🗑️</button></td>
                     </tr>
                 `;
             }
@@ -78,6 +81,7 @@ export async function renderOrderManagementPage() {
                                     <td></td>
                                     <td></td>
                                     <td style="text-align: right;"><strong>${formatPrice(order_total)}</strong></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -1,4 +1,4 @@
-import { renderProductDetailPage } from "./product.js";
+import {renderProductDetailPage} from "./product.js";
 import {renderProductsSidebar} from "../ui/sidebar.js";
 import {BACKEND_BASE_URL} from "../util/rest.js";
 
@@ -19,7 +19,7 @@ export async function renderProductsPage() {
     renderProductsSidebar();
 
     function fetchProducts(searchTerm = "") {
-        let url = BACKEND_BASE_URL+'/api/products';
+        let url = BACKEND_BASE_URL + '/api/products';
         if (searchTerm) {
             url += `?search=${encodeURIComponent(searchTerm)}`;
         }
@@ -53,18 +53,18 @@ export async function renderProductsPage() {
     });
 }
 
-export function fetchProductsByCategory(categoryId){
+export function fetchProductsByCategory(categoryId) {
 
     let productList = document.getElementById("product-list");
 
-    if(productList==null){
+    if (productList == null) {
         console.warn("productList is null. Are you on the products page?");
         return;
     }
 
     productList.innerHTML = '<div class="text-center">Loading products...</div>';
 
-    let url = BACKEND_BASE_URL+`/api/products/filter?categoryId=${categoryId}`;
+    let url = BACKEND_BASE_URL + `/api/products/filter?categoryId=${categoryId}`;
 
     fetch(url)
         .then(response => {
@@ -86,10 +86,15 @@ export function fetchProductsByCategory(categoryId){
 
 //display Products (for product search and filter by category (sidebar))
 function displayProducts(products) {
-    const productCards = products.map(product => `
+    const productCards = products.map(product => {
+        const imageSrc = product.imageUrl
+            ? `${BACKEND_BASE_URL.replace('/api', '')}${product.imageUrl}`
+            : '../static/img/default-image.jpg';
+
+        return `
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card">
-                    <img src="${product.imageUrl || '../static/img/default-image.jpg'}" class="card-img-top" alt="${product.name}">
+                    <img src="${imageSrc}" class="card-img-top" alt="${product.name}">
                     <div class="card-body">
                         <h5 class="card-title">${product.name}</h5>
                         <p class="card-text">${product.description}</p>
@@ -98,7 +103,8 @@ function displayProducts(products) {
                     </div>
                 </div>
             </div>
-        `).join('');
+        `;
+    }).join('');
 
     document.getElementById("product-list").innerHTML = productCards || "<p>No products found.</p>";
 }

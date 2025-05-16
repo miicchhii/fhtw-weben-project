@@ -4,16 +4,19 @@ import {addToCart} from "../ui/cartSidebar.js";
 
 export function renderProductDetailPage(productId) {
     // Fetch product details by ID
-    fetch(BACKEND_BASE_URL+`/api/products/${productId}`)
+    fetch(BACKEND_BASE_URL + `/api/products/${productId}`)
         .then(response => response.json())
         .then(product => {
             // Generate HTML for product details
+            const imageSrc = product.imageUrl
+                ? `${BACKEND_BASE_URL.replace('/api', '')}${product.imageUrl}`
+                : '../static/img/default-image.jpg';
             const productDetail = `
                 <div class="container mt-5">
                     <h1>${product.name}</h1>
                     <div class="row">
                         <div class="col-md-6">
-                            <img src="${product.imageUrl || '../static/img/default-image.jpg'}" class="img-fluid" alt="${product.name}">
+                            <img src="${imageSrc}" class="img-fluid" alt="${product.name}">
                         </div>
                         <div class="col-md-6">
                             <h4>Description:</h4>
@@ -41,7 +44,6 @@ export function renderProductDetailPage(productId) {
             document.getElementById("addToCartBtn").addEventListener("click", function () {
                 addToCart(product.id); // 👈 Make sure addToCart is in scope
             });
-
 
 
         })

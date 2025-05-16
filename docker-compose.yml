@@ -25,7 +25,7 @@ services:
       PMA_USER: root                 # User for logging into phpMyAdmin
       PMA_PASSWORD: rootpassword     # The password for the user
     ports:
-      - "1234:80"                    # Expose phpMyAdmin on port 8080
+      - "1234:80"                    # Expose phpMyAdmin
     networks:
       - mysql-network
     depends_on:

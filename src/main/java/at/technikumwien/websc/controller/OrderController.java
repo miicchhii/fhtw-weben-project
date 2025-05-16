@@ -72,6 +72,7 @@ public class OrderController {
 
         List<OrderItemDTO> items = order.getItems().stream()
                 .map(item -> new OrderItemDTO(
+                        item.getProduct().getId(),
                         item.getProduct().getName(),
                         item.getQuantity(),
                         item.getPriceAtPurchase(),
@@ -93,10 +94,6 @@ public class OrderController {
 
         return ResponseEntity.ok(dto);
     }
-
-
-
-
 
 
 }

@@ -59,6 +59,7 @@ public class OrderService {
         return orders.stream().map(order -> {
             List<OrderItemDTO> itemDTOs = order.getItems().stream()
                     .map(item -> new OrderItemDTO(
+                            item.getProduct().getId(),
                             item.getProduct().getName(),
                             item.getQuantity(),
                             item.getPriceAtPurchase(),
@@ -87,6 +88,7 @@ public class OrderService {
         return orders.stream().map(order -> {
             List<OrderItemDTO> items = order.getItems().stream()
                     .map(item -> new OrderItemDTO(
+                            item.getProduct().getId(),
                             item.getProduct().getName(),
                             item.getQuantity(),
                             item.getPriceAtPurchase(),
@@ -95,7 +97,7 @@ public class OrderService {
                     .toList();
 
 
-                    User u = order.getUser();
+            User u = order.getUser();
 
             return new OrderDTO(
                     order.getId(),
