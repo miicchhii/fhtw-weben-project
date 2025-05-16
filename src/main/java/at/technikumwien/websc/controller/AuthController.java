@@ -38,6 +38,10 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
         }
 
+        if (!user.isActive()) {
+            return ResponseEntity.status(403).body(Map.of("error", "Account is deactivated"));
+        }
+
         var authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
         var authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authToken);
