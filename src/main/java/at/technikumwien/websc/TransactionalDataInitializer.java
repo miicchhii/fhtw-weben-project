@@ -5,6 +5,7 @@ import at.technikumwien.websc.repository.ProductRepository;
 import at.technikumwien.websc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,8 @@ public class TransactionalDataInitializer implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public TransactionalDataInitializer(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
@@ -129,13 +132,13 @@ public class TransactionalDataInitializer implements CommandLineRunner {
 
     private void seedUsers() {
         if (userRepository.count() > 0) return;
-        userRepository.save(new User("Hans", "Müller", "hans.mueller@gmail.com", "hans123", "hanspw", User.Role.ROLE_ADMIN));
-        userRepository.save(new User("Anna", "Schmidt", "anna.schmidt@gmail.com", "anna.schmidt", "asdkjhsd898sdhs", User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("John", "Doe", "john.doe@example.com", "johndoe", "password12345", User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("Maria", "Weber", "maria.weber@gmail.com", "mariaw", "fhnfgh321asdf", User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("David", "Klein", "david.klein@example.com", "david.klein", "qw34fd6gh7jds", User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("Laura", "Meyer", "laura.meyer@gmail.com", "lauram", "kljhasdf654", User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("Peter", "Schneider", "peter.schneider@gmail.com", "peters", "kjhgf8d9k1js", User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("Hans", "Müller", "hans.mueller@gmail.com", "hans123", passwordEncoder.encode("hanspw"), User.Role.ROLE_ADMIN));
+        userRepository.save(new User("Anna", "Schmidt", "anna.schmidt@gmail.com", "anna.schmidt", passwordEncoder.encode("annapw"), User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("John", "Doe", "john.doe@example.com", "johndoe", passwordEncoder.encode("johnpw"), User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("Maria", "Weber", "maria.weber@gmail.com", "mariaw", passwordEncoder.encode("mariapw"), User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("David", "Klein", "david.klein@example.com", "david.klein", passwordEncoder.encode("davidpw"), User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("Laura", "Meyer", "laura.meyer@gmail.com", "lauram", passwordEncoder.encode("laurapw"), User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("Peter", "Schneider", "peter.schneider@gmail.com", "peters", passwordEncoder.encode("peterpw"), User.Role.ROLE_CUSTOMER));
     }
 
 }

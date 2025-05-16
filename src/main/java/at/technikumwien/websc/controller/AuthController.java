@@ -1,9 +1,9 @@
 package at.technikumwien.websc.controller;
 
 import at.technikumwien.websc.User;
-import at.technikumwien.websc.repository.UserRepository;
 import at.technikumwien.websc.dto.LoginRequest;
 import at.technikumwien.websc.dto.RegisterRequest;
+import at.technikumwien.websc.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,6 +23,8 @@ public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
@@ -34,9 +36,10 @@ public class AuthController {
             user = userRepository.findByUsernameIgnoreCase(loginInput);
         }
 
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
         }
+
 
         var authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
         var authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
@@ -90,7 +93,7 @@ public class AuthController {
                 request.lastName(),
                 request.email(),
                 request.username(),
-                request.passwordHash(), // 🛡 Optional: hash this later
+                passwordEncoder.encode(request.passwordHash()),
                 User.Role.ROLE_CUSTOMER
         );
 
@@ -118,21 +121,17 @@ public class AuthController {
         }
 
 
-        if (!user.getPassword().equals(oldPassword)) {
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             return ResponseEntity.status(400).body(Map.of("error", "Old password is incorrect"));
         }
 
-
-        user.setPassword(newPassword); // 🛡 später: Hier PasswordEncoder verwenden!
+        user.setPassword(passwordEncoder.encode(newPassword));
 
         userRepository.save(user);
-
 
         session.setAttribute("user", user);
 
         return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
     }
-
-
 
 }
