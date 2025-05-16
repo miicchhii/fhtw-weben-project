@@ -45,21 +45,13 @@ public class TransactionalDataInitializer implements CommandLineRunner {
         List<Category> categories = List.of(
                 new Category("Laptops"),
                 new Category("Smartphones"),
-                new Category("Headphones"),
                 new Category("Tablets"),
-                new Category("Smartwatches"),
                 new Category("Cameras"),
                 new Category("Gaming"),
                 new Category("TVs"),
-                new Category("Home Audio"),
-                new Category("Computer Accessories"),
-                new Category("Smart Home Devices"),
-                new Category("Virtual Reality"),
                 new Category("Wearable Tech"),
-                new Category("PC Components"),
-                new Category("Chargers & Batteries"),
-                new Category("Audio"),
-                new Category("Smart Home")
+                new Category("Smart Home"),
+                new Category("Audio")
         );
 
         categoryRepository.saveAll(categories);
