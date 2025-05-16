@@ -66,7 +66,18 @@ public class OrderService {
                     ))
                     .toList();
 
-            return new OrderDTO(order.getId(), order.getCreatedAt(), itemDTOs);
+            User u = order.getUser();
+
+            return new OrderDTO(
+                    order.getId(),
+                    order.getCreatedAt(),
+                    u.getUsername(),
+                    u.getEmail(),
+                    u.getFirstName(),
+                    u.getLastName(),
+                    u.getAddress(),
+                    itemDTOs
+            );
         }).toList();
     }
 
@@ -83,14 +94,24 @@ public class OrderService {
                     ))
                     .toList();
 
+
+                    User u = order.getUser();
+
             return new OrderDTO(
                     order.getId(),
                     order.getCreatedAt(),
-                    order.getUser().getFirstName() + " " + order.getUser().getLastName(),
-                    order.getUser().getEmail(),
-                    items
-            );
+                    u.getUsername(),
+                    u.getEmail(),
+                    u.getFirstName(),
+                    u.getLastName(),
+                    u.getAddress(),
+                    items);
         }).toList();
+    }
+
+    public Order findOrderById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
     }
 
 }

@@ -15,6 +15,7 @@ import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.Table;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -52,7 +53,15 @@ public class Product {
     @JoinColumn(name = "categoryid", nullable = false)
     private Category category;
 
+    @Column(length = 255) //
+    private String imageUrl;
+
     public Product(String name, String description, BigDecimal price, LocalDate creationDate, Category category) {
-        this(null, name, description, price, creationDate, category);
+        this(null, name, description, price, creationDate, category, null);
     }
+
+
+
+
+
 }
