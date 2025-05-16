@@ -90,8 +90,9 @@ public class AuthController {
                 request.lastName(),
                 request.email(),
                 request.username(),
-                request.passwordHash(), // 🛡 Optional: hash this later
+                request.passwordHash(),
                 User.Role.ROLE_CUSTOMER
+
         );
 
         userRepository.save(newUser);
@@ -123,7 +124,7 @@ public class AuthController {
         }
 
 
-        user.setPassword(newPassword); // 🛡 später: Hier PasswordEncoder verwenden!
+        user.setPassword(newPassword);
 
         userRepository.save(user);
 
