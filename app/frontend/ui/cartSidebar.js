@@ -114,7 +114,7 @@ export async function loadCartSidebar() {
     cartHeader.innerHTML = `
         <div class="cart-header d-flex justify-content-between align-items-center p-3">
             <h5 class="mb-0">Your Cart</h5>
-            <button class="btn btn-outline-danger btn-sm me-2" onclick="emptyCart()" title="Empty Cart">
+            <button class="btn btn-outline-danger border-0 btn-sm me-2" onclick="emptyCart()" title="Empty Cart">
                 🗑️
             </button>
         </div>
@@ -155,9 +155,9 @@ export async function loadCartSidebar() {
               Quantity: <span id="quantity-${item.productId}">${item.quantity}</span>
             </div>
             <div class="d-flex align-items-center">
-              <button class="btn btn-sm btn-outline-primary me-1" data-action="increase" data-product-id="${item.productId}">+</button>
-              <button class="btn btn-sm btn-outline-primary me-1" data-action="decrease" data-product-id="${item.productId}">-</button>
-              <button class="btn btn-sm btn-outline-danger" data-action="remove" data-product-id="${item.productId}">🗑️</button>
+              <button class="btn btn-sm btn-outline-primary border-0 me-1" data-action="increase" data-product-id="${item.productId}">+</button>
+              <button class="btn btn-sm btn-outline-primary border-0 me-1" data-action="decrease" data-product-id="${item.productId}">-</button>
+              <button class="btn btn-sm btn-outline-danger border-0" data-action="remove" data-product-id="${item.productId}">🗑️</button>
             </div>
           </div>
         `;
@@ -184,7 +184,7 @@ export async function loadCartSidebar() {
     if (total > 0) {
         cartTotalEl.innerHTML = "<strong>Total: " + formatPrice(total) + "</strong>";
         if (user) {
-            cartButtonArea.innerHTML = `<button className="btn btn-success mt-3" id="placeOrderBtn">Place Order</button>`;
+            cartButtonArea.innerHTML = `<button class="btn btn-success" id="placeOrderBtn">Place Order</button>`;
 
             document.getElementById("placeOrderBtn").addEventListener("click", async () => {
                 try {
