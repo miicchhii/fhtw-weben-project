@@ -72,7 +72,7 @@ public class OrderController {
 
         List<OrderItemDTO> items = order.getItems().stream()
                 .map(item -> new OrderItemDTO(
-                        item.getProduct().getId(),
+                        item.getId(),
                         item.getProduct().getName(),
                         item.getQuantity(),
                         item.getPriceAtPurchase(),
@@ -95,5 +95,19 @@ public class OrderController {
         return ResponseEntity.ok(dto);
     }
 
+    @DeleteMapping("/item/{orderItemId}")
+    public ResponseEntity<?> deleteOrderItem(@PathVariable Long orderItemId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getRole() != User.Role.ROLE_ADMIN) {
+            return ResponseEntity.status(403).body("Access denied");
+        }
+
+        boolean deleted = orderService.deleteOrderItem(orderItemId);
+        if (!deleted) {
+            return ResponseEntity.status(404).body("Order item not found");
+        }
+
+        return ResponseEntity.ok(Map.of("status", "deleted"));
+    }
 
 }
