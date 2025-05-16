@@ -8,13 +8,7 @@ import {renderOrderManagementPage} from "../pages/admin/orders.js";
 import {renderProductManagementPage} from "../pages/admin/productManagement.js";
 
 export function renderSidebar() {
-    document.getElementById("sidebar").innerHTML = `
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Dashboard</li>
-            <li class="list-group-item">Settings</li>
-            <li class="list-group-item">Profile</li>
-        </ul>
-    `;
+    renderEmptySidebar();
 }
 
 export function renderProductsSidebar() {
@@ -110,9 +104,6 @@ export function renderAdminSidebar() {
             <li class="list-group-item">
                 <a href="#" id="productManagementSidebarLink">Manage Products</a>
             </li>
-            <li class="list-group-item">
-                <a href="#" id="categoryManagementSidebarLink">Manage Categories</a>
-            </li>
         </ul>
     `;
 
@@ -132,11 +123,7 @@ export function renderAdminSidebar() {
         renderProductManagementPage();
     });
 
-    document.getElementById("categoryManagementSidebarLink").addEventListener("click", (e) => {
-        e.preventDefault();
-        alert("This page is not yet implemented.");
-        //renderOrdersPage();
-    });
+    
 }
 
 export function renderEmptySidebar() {

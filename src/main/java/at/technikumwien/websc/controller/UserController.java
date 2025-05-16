@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -19,6 +20,9 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     // GET /api/users – Only Admins
     @GetMapping
@@ -86,7 +90,17 @@ public class UserController {
 
         User user = userOpt.get();
 
-        // ✅ check for unique in email
+        //check password correct
+        String password = updates.get("password");
+        if (password == null || password.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Password is required to update your profile."));
+        }
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            return ResponseEntity.status(403).body(Map.of("error", "Incorrect password."));
+        }
+
+        // check unique email
         if (updates.containsKey("email")) {
             String newEmail = updates.get("email");
             if (!newEmail.equalsIgnoreCase(user.getEmail()) &&
@@ -96,7 +110,7 @@ public class UserController {
             user.setEmail(newEmail);
         }
 
-        // ✅ check for unique in username
+        // check unique username
         if (updates.containsKey("username")) {
             String newUsername = updates.get("username");
             if (!newUsername.equalsIgnoreCase(user.getUsername()) &&
@@ -110,12 +124,18 @@ public class UserController {
         if (updates.containsKey("firstName")) user.setFirstName(updates.get("firstName"));
         if (updates.containsKey("lastName")) user.setLastName(updates.get("lastName"));
         if (updates.containsKey("address")) user.setAddress(updates.get("address"));
-        if (updates.containsKey("birthdate")) {
+
+        // check birthday, if empty, set to null (delete)
+        String birthdate = updates.get("birthdate");
+        System.out.println(birthdate);
+        if (!birthdate.isBlank()) {
             try {
-                user.setBirthdate(java.sql.Date.valueOf(updates.get("birthdate")));
+                user.setBirthdate(java.sql.Date.valueOf(birthdate));
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Invalid birthdate format (expected: YYYY-MM-DD)"));
             }
+        } else {
+            user.setBirthdate(null);
         }
 
         userRepository.save(user);
@@ -147,10 +167,6 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
-
-
-
-
 
 
 }

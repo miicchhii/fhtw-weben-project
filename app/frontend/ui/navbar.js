@@ -30,9 +30,10 @@ export async function renderNavBar() {
     <li class="nav-item">
         <button id="productsBtn" class="btn btn-outline-primary border-0 mx-2">Products</button>
     </li>
+    ${user ? `
     <li class="nav-item">
         <button id="accountBtn" class="btn btn-outline-primary border-0 mx-2">My Account</button>
-    </li>
+    </li>` : ``}
     ${user?.role === 'ROLE_ADMIN' ? `
         <li class="nav-item">
             <button id="adminBtn" class="btn btn-outline-danger border-0 mx-2">Admin</button>
