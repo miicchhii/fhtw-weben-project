@@ -139,3 +139,7 @@ export function renderAdminSidebar() {
     });
 }
 
+export function renderEmptySidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.innerHTML = ``;
+}

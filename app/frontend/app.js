@@ -1,5 +1,5 @@
 import {renderNavBar} from './ui/navbar.js';
-import {renderSidebar} from './ui/sidebar.js';
+import {renderEmptySidebar} from './ui/sidebar.js';
 import {renderHomePage} from './pages/home.js';
 import {emptyCart, loadCartSidebar, toggleCartSidebar} from "./ui/cartSidebar.js";
 
@@ -33,7 +33,7 @@ async function init() {
 
     // Render sections
     await renderNavBar();
-    renderSidebar();
+    renderEmptySidebar();
 
     // Default page
     renderHomePage();

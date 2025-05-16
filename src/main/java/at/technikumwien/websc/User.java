@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -29,10 +30,10 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Getter
     @JsonIgnore
     @Column(nullable = false)
     private String password;  // Hashed password storage
-
 
 
     @Enumerated(EnumType.STRING)
@@ -48,7 +49,6 @@ public class User {
     @Column(nullable = false)
     private boolean active = true;
 
-
     public User(String firstName, String lastName, String email, String username, String passwordHash, Role role) {
         this(null, firstName, lastName, email, username, passwordHash, role, null, null, true);
     }
@@ -58,18 +58,10 @@ public class User {
     }
 
 
-
-    public Object getPassword() {
-        return password;
-    }
-
-
-
     public enum Role {
         ROLE_CUSTOMER,
         ROLE_ADMIN
     }
-
 
 
 }

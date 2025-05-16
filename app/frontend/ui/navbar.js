@@ -5,7 +5,7 @@ import {renderLoginPage} from "../pages/user/login.js";
 import {renderUserManagementPage} from "../pages/admin/users.js";
 import {checkLoginStatus} from "../util/helper.js"
 import {BACKEND_BASE_URL} from "../util/rest.js";
-import {renderAdminSidebar, renderSidebar, renderUserSidebar} from "./sidebar.js";
+import {renderAdminSidebar, renderEmptySidebar, renderSidebar, renderUserSidebar} from "./sidebar.js";
 
 
 export async function renderNavBar() {
@@ -79,7 +79,7 @@ function setupNavigation() {
 
     document.getElementById("homeBtn")?.addEventListener("click", () => {
         renderHomePage();
-        renderSidebar();
+        renderEmptySidebar();
     });
 
     document.getElementById("accountBtn")?.addEventListener("click", () => {

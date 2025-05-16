@@ -1,5 +1,5 @@
 import {renderProductDetailPage} from "./product.js";
-import {renderProductsSidebar} from "../ui/sidebar.js";
+import {renderEmptySidebar, renderProductsSidebar} from "../ui/sidebar.js";
 import {BACKEND_BASE_URL} from "../util/rest.js";
 
 
@@ -49,6 +49,7 @@ export async function renderProductsPage() {
             event.preventDefault();
             const productId = event.target.getAttribute("data-product-id");
             renderProductDetailPage(productId);
+            renderEmptySidebar();
         }
     });
 }
