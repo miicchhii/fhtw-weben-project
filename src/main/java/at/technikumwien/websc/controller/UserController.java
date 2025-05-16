@@ -4,6 +4,7 @@ import at.technikumwien.websc.User;
 import at.technikumwien.websc.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -122,6 +123,34 @@ public class UserController {
 
         return ResponseEntity.ok(Map.of("message", "Profile updated successfully"));
     }
+
+    @PutMapping("/{id}/active")
+    public ResponseEntity<?> updateUserActiveStatus(@PathVariable Long id, @RequestBody Map<String, Boolean> body, HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null || currentUser.getRole() != User.Role.ROLE_ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+        }
+
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Boolean active = body.get("active");
+        if (active == null) {
+            return ResponseEntity.badRequest().body("Missing 'active' parameter");
+        }
+
+        User targetUser = userOpt.get();
+        targetUser.setActive(active);
+        userRepository.save(targetUser);
+
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
 
 
 }

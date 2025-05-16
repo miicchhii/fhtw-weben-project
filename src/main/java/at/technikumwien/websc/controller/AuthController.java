@@ -38,6 +38,10 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
         }
 
+        if (!user.isActive()) {
+            return ResponseEntity.status(403).body(Map.of("error", "Account is deactivated"));
+        }
+
         var authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
         var authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authToken);
@@ -90,8 +94,9 @@ public class AuthController {
                 request.lastName(),
                 request.email(),
                 request.username(),
-                request.passwordHash(), // 🛡 Optional: hash this later
+                request.passwordHash(),
                 User.Role.ROLE_CUSTOMER
+
         );
 
         userRepository.save(newUser);
@@ -123,7 +128,7 @@ public class AuthController {
         }
 
 
-        user.setPassword(newPassword); // 🛡 später: Hier PasswordEncoder verwenden!
+        user.setPassword(newPassword);
 
         userRepository.save(user);
 

@@ -45,14 +45,16 @@ public class User {
     @Column
     private java.sql.Date birthdate;
 
+    @Column(nullable = false)
+    private boolean active = true;
 
 
     public User(String firstName, String lastName, String email, String username, String passwordHash, Role role) {
-        this(null, firstName, lastName, email, username, passwordHash, role, null, null);
+        this(null, firstName, lastName, email, username, passwordHash, role, null, null, true);
     }
 
     public User(String firstName, String lastName, String email, String username, String passwordHash) {
-        this(null, firstName, lastName, email, username, passwordHash, Role.ROLE_CUSTOMER, null, null);
+        this(null, firstName, lastName, email, username, passwordHash, Role.ROLE_CUSTOMER, null, null, true);
     }
 
 
