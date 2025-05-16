@@ -65,12 +65,12 @@ export async function renderOrderManagementPage() {
                 order_total += line_total;
 
                 orderHtml += `
-                    <tr>
+                    <tr data-order-item-id="${item.orderItemId}">
                         <td>${item.productName}</td>
                         <td>${item.quantity}</td>
                         <td style="text-align: right;">${formatPrice(item.priceAtPurchase)}</td>
                         <td style="text-align: right;">${formatPrice(line_total)}</td>
-                        <td><button class="btn" data-action="remove" data-product-id="${item.productId}">🗑️</button></td>
+                        <td><button class="btn" data-action="remove">🗑️</button></td>
                     </tr>
                 `;
             }
@@ -92,6 +92,24 @@ export async function renderOrderManagementPage() {
 
         orderHtml += `</div>`;
         document.getElementById("content").innerHTML = orderHtml;
+        document.querySelectorAll('[data-action="remove"]').forEach(button => {
+            button.addEventListener('click', async () => {
+                const orderItemId = button.closest("tr").dataset.orderItemId;
+
+                if (!confirm("Are you sure you want to remove this item from the order?")) return;
+
+                const res = await fetch(`${BACKEND_BASE_URL}/api/orders/item/${orderItemId}`, {
+                    method: "DELETE",
+                    credentials: "include"
+                });
+
+                if (res.ok) {
+                    renderOrderManagementPage();
+                } else {
+                    alert("Failed to remove item.");
+                }
+            });
+        });
 
     } catch (err) {
         console.error("Error loading admin orders:", err);

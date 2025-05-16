@@ -4,6 +4,7 @@ import at.technikumwien.websc.*;
 import at.technikumwien.websc.dto.OrderDTO;
 import at.technikumwien.websc.dto.OrderItemDTO;
 import at.technikumwien.websc.repository.CartRepository;
+import at.technikumwien.websc.repository.OrderItemRepository;
 import at.technikumwien.websc.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor // 👈 Lombok generates constructor for required fields
@@ -19,6 +21,8 @@ public class OrderService {
 
     private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
+    private final
+    OrderItemRepository orderItemRepository;
 
     @Transactional
     public Order placeOrder(User user) {
@@ -88,7 +92,7 @@ public class OrderService {
         return orders.stream().map(order -> {
             List<OrderItemDTO> items = order.getItems().stream()
                     .map(item -> new OrderItemDTO(
-                            item.getProduct().getId(),
+                            item.getId(),
                             item.getProduct().getName(),
                             item.getQuantity(),
                             item.getPriceAtPurchase(),
@@ -114,6 +118,14 @@ public class OrderService {
     public Order findOrderById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+    }
+
+    public boolean deleteOrderItem(Long orderItemId) {
+        Optional<OrderItem> optional = orderItemRepository.findById(orderItemId);
+        if (optional.isEmpty()) return false;
+
+        orderItemRepository.delete(optional.get());
+        return true;
     }
 
 }
