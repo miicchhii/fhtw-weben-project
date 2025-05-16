@@ -1,24 +1,12 @@
 package at.technikumwien.websc;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.Table;
-
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -60,8 +48,9 @@ public class Product {
         this(null, name, description, price, creationDate, category, null);
     }
 
-
-
+    public Product(String name, String description, BigDecimal price, LocalDate creationDate, Category category, String imageUrl) {
+        this(null, name, description, price, creationDate, category, imageUrl);
+    }
 
 
 }
