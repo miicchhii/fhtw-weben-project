@@ -31,7 +31,10 @@ export function renderUserManagementPage() {
                             <div class="card-body">
                                 <h5 class="card-title">${user.firstName} ${user.lastName}</h5>
                                 <p class="card-text">${user.email}</p>
-                                <a href="#" class="btn btn-primary" data-user-id="${user.id}">View Details</a>
+                                 <div class="d-flex justify-content-between gap-2">
+                                    <a href="#" class="btn btn-primary btn-details" data-user-id="${user.id}">View Details</a>
+                                    <a href="#" class="btn btn-danger btn-deactivate" data-user-id="${user.id}">Deactivate User</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -51,5 +54,35 @@ export function renderUserManagementPage() {
         const query = event.target.value.trim();
         fetchUsers(query);
     })
+
+    function deactivateUser(userId) {
+        fetch(`${BACKEND_BASE_URL}/api/users/${userId}/deactivate`, {
+            method: "POST",
+            credentials: "include"
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("User successfully deactivated.");
+                    fetchUsers(); // Refresh list
+                } else {
+                    return response.json().then(err => {
+                        throw new Error(err.message || "Deactivation failed.");
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Deactivation error:", error);
+                alert("Failed to deactivate user: " + error.message);
+            });
+    }
+
+    fetchUsers();
+
+    document.getElementById("search-input").addEventListener("input", (event) => {
+        const query = event.target.value.trim();
+        fetchUsers(query);
+    });
+
+
 
 }
