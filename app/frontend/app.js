@@ -2,6 +2,7 @@ import {renderNavBar} from './ui/navbar.js';
 import {renderEmptySidebar} from './ui/sidebar.js';
 import {renderHomePage} from './pages/home.js';
 import {emptyCart, loadCartSidebar, toggleCartSidebar} from "./ui/cartSidebar.js";
+//import Toastify from './ui/toastify.js'
 
 document.addEventListener("DOMContentLoaded", init);
 
