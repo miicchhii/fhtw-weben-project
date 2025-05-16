@@ -117,9 +117,24 @@ export async function emptyCart() {
 
             if (!response.ok) {
                 throw new Error("Failed to empty server cart.");
+            } else {
+                Toastify({
+                    text: "Emptied Cart.",
+                    duration: 3000,
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
             }
         } catch (error) {
-            console.error("Error emptying cart:", error);
+            Toastify({
+                text: "Failed empty Cart.",
+                duration: 3000,
+                style: {
+                    background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                }
+            }).showToast();
+            // console.error("Error emptying cart:", error);
         }
     } else {
         // Clear localStorage cart for guests
