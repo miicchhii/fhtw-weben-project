@@ -23,19 +23,32 @@ export async function renderNavBar() {
                         </button>
                     </div>
                     <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><button id="homeBtn" class="nav-link">Home</button></li>
-                        <li class="nav-item"><button id="productsBtn" class="nav-link">Products</button></li>
-                        <li class="nav-item"><button id="accountBtn" class="nav-link">My Account</button></li>
-                        ${user?.role === 'ROLE_ADMIN' ? `
-                            <li class="nav-item"><button id="adminBtn" class="nav-link">Admin</button></li>
-                        ` : ''}
-                        ${user ? `
-                            <li class="nav-item"><button id="logoutBtn" class="nav-link">Logout</button></li>
-                        ` : `
-                            <li class="nav-item"><button id="loginBtn" class="nav-link">Login</button></li>
-                        `}
-                    </ul>
+                    <ul class="navbar-nav align-items-center">
+    <li class="nav-item">
+        <button id="homeBtn" class="btn btn-outline-primary border-0 mx-2">Home</button>
+    </li>
+    <li class="nav-item">
+        <button id="productsBtn" class="btn btn-outline-primary border-0 mx-2">Products</button>
+    </li>
+    <li class="nav-item">
+        <button id="accountBtn" class="btn btn-outline-primary border-0 mx-2">My Account</button>
+    </li>
+    ${user?.role === 'ROLE_ADMIN' ? `
+        <li class="nav-item">
+            <button id="adminBtn" class="btn btn-outline-danger border-0 mx-2">Admin</button>
+        </li>
+    ` : ''}
+    ${user ? `
+        <li class="nav-item">
+            <button id="logoutBtn" class="btn btn-outline-secondary border-0 mx-2">Logout</button>
+        </li>
+    ` : `
+        <li class="nav-item">
+            <button id="loginBtn" class="btn btn-outline-success border-0 mx-2">Login</button>
+        </li>
+    `}
+</ul>
+
                 </div>
                     ${user ? `
                         <span class="navbar-text me-3">
