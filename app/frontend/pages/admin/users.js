@@ -1,4 +1,4 @@
-import {BACKEND_BASE_URL} from "../../util/rest.js";
+import { BACKEND_BASE_URL } from "../../util/rest.js";
 
 export function renderUserManagementPage() {
     document.getElementById("content").innerHTML = `
@@ -25,19 +25,70 @@ export function renderUserManagementPage() {
         })
             .then(response => response.json())
             .then(users => {
-                const userCards = users.map(user => `
+                const userCards = users.map(user => {
+                    const toggleText = user.active ? "Deactivate User" : "Activate User";
+                    const toggleClass = user.active ? "btn-danger" : "btn-success";
+
+                    return `
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">${user.firstName} ${user.lastName}</h5>
                                 <p class="card-text">${user.email}</p>
-                                <a href="#" class="btn btn-primary" data-user-id="${user.id}">View Details</a>
+                                <div class="d-flex justify-content-between gap-2">
+                                    <a href="#" class="btn btn-primary btn-details" data-user-id="${user.id}">View Details</a>
+                                    <a href="#" class="btn ${toggleClass} btn-toggle-active" 
+                                       data-user-id="${user.id}" 
+                                       data-user-active="${user.active}">
+                                        ${toggleText}
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                `).join('');
+                `;
+                }).join('');
 
                 document.getElementById("user-list").innerHTML = userCards || "<p>No users found.</p>";
+
+                // Event: Toggle Active Status
+                document.querySelectorAll(".btn-toggle-active").forEach(button => {
+                    button.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        const userId = button.getAttribute("data-user-id");
+                        const isActive = button.getAttribute("data-user-active") === "true";
+                        const newStatus = !isActive;
+
+                        fetch(`${BACKEND_BASE_URL}/api/users/${userId}/active`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            credentials: "include",
+                            body: JSON.stringify({ active: newStatus })
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    fetchUsers(); // refresh list
+                                } else {
+                                    alert("Failed to update user status.");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error updating user:", error);
+                                alert("An error occurred.");
+                            });
+                    });
+                });
+
+                // Event: View Details (Stub)
+                document.querySelectorAll(".btn-details").forEach(button => {
+                    button.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        const userId = button.getAttribute("data-user-id");
+                        alert("Details for user ID: " + userId);
+                    });
+                });
             })
             .catch(error => {
                 console.error('Error fetching users:', error);
@@ -50,6 +101,5 @@ export function renderUserManagementPage() {
     document.getElementById("search-input").addEventListener("input", (event) => {
         const query = event.target.value.trim();
         fetchUsers(query);
-    })
-
+    });
 }
