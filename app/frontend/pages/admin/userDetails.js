@@ -10,7 +10,7 @@ export async function renderUserDetailsPage(userId) {
         });
 
         if (!userRes.ok) {
-            throw new Error("Fehler beim Laden der Benutzerdaten.");
+            throw new Error("error loading user data.");
         }
 
         const user = await userRes.json();
@@ -42,7 +42,7 @@ export async function renderUserDetailsPage(userId) {
             renderUserManagementPage();
         });
 
-        // 3. Orders laden
+        // LOAD ORDERS
         const res = await fetch(`${BACKEND_BASE_URL}/api/orders/user/${userId}`, {
 
             credentials: "include"
