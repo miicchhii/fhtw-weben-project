@@ -65,7 +65,7 @@ export async function renderUserDetailsPage(userId) {
 
         let orderHtml = `
             <div class="container mt-4">
-                <h2>Manage Orders</h2>
+                <h2>Orders</h2>
         `;
 
         for (const order of orders) {
