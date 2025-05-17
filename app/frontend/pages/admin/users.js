@@ -1,4 +1,5 @@
 import { BACKEND_BASE_URL } from "../../util/rest.js";
+import {renderUserDetailsPage} from "./userDetails.js";
 
 export function renderUserManagementPage() {
     document.getElementById("content").innerHTML = `
@@ -81,14 +82,15 @@ export function renderUserManagementPage() {
                     });
                 });
 
-                // Event: View Details (Stub)
-                document.querySelectorAll(".btn-details").forEach(button => {
-                    button.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        const userId = button.getAttribute("data-user-id");
-                        alert("Details for user ID: " + userId);
+                // Event: View Details
+                document.querySelectorAll(".btn-details").forEach(link => {
+                    link.addEventListener("click", (event) => {
+                        event.preventDefault(); // verhindert das Neuladen der Seite
+                        const userId = event.currentTarget.getAttribute("data-user-id");
+                        renderUserDetailsPage(userId);
                     });
                 });
+
             })
             .catch(error => {
                 console.error('Error fetching users:', error);
