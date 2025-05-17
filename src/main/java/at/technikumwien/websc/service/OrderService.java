@@ -6,6 +6,7 @@ import at.technikumwien.websc.dto.OrderItemDTO;
 import at.technikumwien.websc.repository.CartRepository;
 import at.technikumwien.websc.repository.OrderItemRepository;
 import at.technikumwien.websc.repository.OrderRepository;
+import at.technikumwien.websc.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final
     OrderItemRepository orderItemRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Order placeOrder(User user) {
@@ -119,6 +121,15 @@ public class OrderService {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
     }
+
+
+    public List<OrderDTO> getOrdersByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return getOrders(user);
+    }
+
 
     public boolean deleteOrderItem(Long orderItemId) {
         Optional<OrderItem> optional = orderItemRepository.findById(orderItemId);

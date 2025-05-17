@@ -95,6 +95,25 @@ public class OrderController {
         return ResponseEntity.ok(dto);
     }
 
+    // OrderController.java
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getOrdersByUserId(
+            @PathVariable Long userId,
+            HttpSession session
+    ) {
+        User requestingUser = (User) session.getAttribute("user");
+        if (requestingUser == null || requestingUser.getRole() != User.Role.ROLE_ADMIN) {
+            return ResponseEntity.status(403).body("Access denied");
+        }
+
+        List<OrderDTO> orders = orderService.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
+    }
+
+
+
+
+
     @DeleteMapping("/item/{orderItemId}")
     public ResponseEntity<?> deleteOrderItem(@PathVariable Long orderItemId, HttpSession session) {
         User user = (User) session.getAttribute("user");
