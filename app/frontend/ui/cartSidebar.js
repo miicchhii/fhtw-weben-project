@@ -27,19 +27,56 @@ export async function addToCart(productId) {
             });
 
             if (!response.ok) {
+                Toastify({
+                    text: "Failed to fetch cart before updating quantity.",
+                    duration: 3000,
+                    style: {
+                        background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                    }
+                }).showToast();
                 throw new Error("Failed to add item to cart on server.");
+            } else {
+                Toastify({
+                    text: "Added Item to Cart.",
+                    duration: 3000,
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
             }
 
             await loadCartSidebar();
         } catch (err) {
-            console.error("API error while adding to cart:", err);
+            Toastify({
+                text: "API error while adding to cart.",
+                duration: 3000,
+                style: {
+                    background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                }
+            }).showToast();
+            // console.error("API error while adding to cart:", err);
         }
     } else {
         // Guest cart: fetch full product info
         try {
             const res = await fetch(BACKEND_BASE_URL + `/api/products/${productId}`);
             if (!res.ok) {
+                Toastify({
+                    text: "Failed to add Item to Cart.",
+                    duration: 3000,
+                    style: {
+                        background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                    }
+                }).showToast();
                 throw new Error("Failed to fetch product info.");
+            } else {
+                Toastify({
+                    text: "Added Item to Cart.",
+                    duration: 3000,
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
             }
 
             const product = await res.json();
@@ -80,9 +117,24 @@ export async function emptyCart() {
 
             if (!response.ok) {
                 throw new Error("Failed to empty server cart.");
+            } else {
+                Toastify({
+                    text: "Emptied Cart.",
+                    duration: 3000,
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
             }
         } catch (error) {
-            console.error("Error emptying cart:", error);
+            Toastify({
+                text: "Failed empty Cart.",
+                duration: 3000,
+                style: {
+                    background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                }
+            }).showToast();
+            // console.error("Error emptying cart:", error);
         }
     } else {
         // Clear localStorage cart for guests
@@ -195,7 +247,14 @@ export async function loadCartSidebar() {
                     if (!response.ok) {
                         throw new Error("Failed to place order.");
                     }
-                    alert("✅ Order placed successfully!");
+                    Toastify({
+                        text: "Order placed successfully!",
+                        duration: 3000,
+                        style: {
+                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        }
+                    }).showToast();
+
                     await loadCartSidebar(); // Cart will be empty now
                 } catch (err) {
                     console.error("Order placement failed:", err);
@@ -222,12 +281,25 @@ export async function removeItem(productId) {
         } catch (err) {
             console.error(err);
         }
+        Toastify({
+            text: "Item removed from Cart!",
+            duration: 3000,
+            style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+            }
+        }).showToast();
     } else {
         // Remove from guest cart
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
         cart = cart.filter(item => item.productId !== parseInt(productId));
-
         localStorage.setItem("cart", JSON.stringify(cart));
+        Toastify({
+            text: "Item removed from Cart!",
+            duration: 3000,
+            style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+            }
+        }).showToast();
     }
 
     await loadCartSidebar();
@@ -245,7 +317,14 @@ async function updateCartItem(productId, change) {
             });
 
             if (!res.ok) {
-                console.error("Failed to fetch cart before updating quantity.");
+                // console.error("Failed to fetch cart before updating quantity.");
+                Toastify({
+                    text: "Failed to fetch cart before updating quantity.",
+                    duration: 3000,
+                    style: {
+                        background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                    }
+                }).showToast();
                 return;
             }
 
@@ -254,6 +333,13 @@ async function updateCartItem(productId, change) {
 
             if (!currentItem) {
                 console.error("Item not found in cart");
+                Toastify({
+                    text: "Item not found in cart.",
+                    duration: 3000,
+                    style: {
+                        background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                    }
+                }).showToast();
                 return;
             }
 
@@ -267,8 +353,23 @@ async function updateCartItem(productId, change) {
                 });
 
                 if (!deleteRes.ok) {
-                    console.error("Failed to delete item from server cart.");
+                    // console.error("Failed to delete item from server cart.");
+                    Toastify({
+                        text: "Failed to delete item from server cart.",
+                        duration: 3000,
+                        style: {
+                            background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                        }
+                    }).showToast();
                     return;
+                } else {
+                    Toastify({
+                        text: "Removed item from cart.",
+                        duration: 3000,
+                        style: {
+                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        }
+                    }).showToast();
                 }
             } else {
                 // Update item quantity
@@ -285,8 +386,23 @@ async function updateCartItem(productId, change) {
                 });
 
                 if (!updateRes.ok) {
-                    console.error("Failed to update item quantity on server cart.");
+                    // console.error("Failed to update item quantity on server cart.");
+                    Toastify({
+                        text: "Failed to update item quantity on server cart.",
+                        duration: 3000,
+                        style: {
+                            background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                        }
+                    }).showToast();
                     return;
+                } else {
+                    Toastify({
+                        text: "Updated item amount.",
+                        duration: 3000,
+                        style: {
+                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        }
+                    }).showToast();
                 }
             }
         } catch (error) {
