@@ -124,13 +124,8 @@ public class TransactionalDataInitializer implements CommandLineRunner {
 
     private void seedUsers() {
         if (userRepository.count() > 0) return;
-        userRepository.save(new User("Hans", "Müller", "hans.mueller@gmail.com", "hans123", passwordEncoder.encode("hanspw"), User.Role.ROLE_ADMIN));
-        userRepository.save(new User("Anna", "Schmidt", "anna.schmidt@gmail.com", "anna.schmidt", passwordEncoder.encode("annapw"), User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("John", "Doe", "john.doe@example.com", "johndoe", passwordEncoder.encode("johnpw"), User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("Maria", "Weber", "maria.weber@gmail.com", "mariaw", passwordEncoder.encode("mariapw"), User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("David", "Klein", "david.klein@example.com", "david.klein", passwordEncoder.encode("davidpw"), User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("Laura", "Meyer", "laura.meyer@gmail.com", "lauram", passwordEncoder.encode("laurapw"), User.Role.ROLE_CUSTOMER));
-        userRepository.save(new User("Peter", "Schneider", "peter.schneider@gmail.com", "peters", passwordEncoder.encode("peterpw"), User.Role.ROLE_CUSTOMER));
+        userRepository.save(new User("Hans", "Müller", "hans.mueller@gmail.com", "admin", passwordEncoder.encode("admin"), User.Role.ROLE_ADMIN));
+        userRepository.save(new User("Anna", "Schmidt", "anna.schmidt@gmail.com", "customer", passwordEncoder.encode("customer"), User.Role.ROLE_CUSTOMER));
     }
 
 }

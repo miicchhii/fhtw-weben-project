@@ -1,4 +1,4 @@
-import {BACKEND_BASE_URL} from "../util/rest.js";
+import {BACKEND_BASE_URL} from "./rest.js";
 
 export async function checkLoginStatus() {
     try {
@@ -35,7 +35,7 @@ export async function processImageToWebp(file) {
         const url = URL.createObjectURL(file);
 
         img.onload = () => {
-            let { width, height } = img;
+            let {width, height} = img;
             const maxDim = 800;
             if (width > maxDim || height > maxDim) {
                 const scale = Math.min(maxDim / width, maxDim / height);
